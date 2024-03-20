@@ -198,7 +198,6 @@ function berechneKostenFuerEinenBus($bustypen, $gewaehlter_bustyp, $entfernung, 
        return $km_kosten;
     	}
      else {
-        // Sonst nimm den Tagessatz
         return $tageskosten;
 
     }
