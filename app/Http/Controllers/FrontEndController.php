@@ -308,9 +308,6 @@ function berechneKosten($bustypen, $gewaehlter_bustyp, $entfernung, $hinfahrtsda
                 $note = "(Hinweis: gilt nicht für Fahrten am selben Tag)";
             }
 
-            // echo " Der Kostenvoranschlag beträgt: €" . number_format(ceil($kostenvoranschlag), 2, ',', '.') . "\n";
-            // echo $zusaetzlicheInfo . "\n";
-
         } else {
             // echo "Für die angegebene Personenanzahl ist kein passender Bustyp verfügbar.\n";
         }
