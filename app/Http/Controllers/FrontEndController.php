@@ -322,10 +322,10 @@ function berechneKosten($bustypen, $gewaehlter_bustyp, $entfernung, $hinfahrtsda
         }
 
         // Berechnung von 5% des Kostenvoranschlags, Calculation of 5% of the estimate
-        $abzug = $kostenvoranschlag * 0.07;
+        // $abzug = $kostenvoranschlag * 0.07;
 
         // Abziehen des berechneten Betrags vom ursprünglichen Kostenvoranschlag, Deducting the calculated amount from the original estimate
-        $kostenvoranschlag -= $abzug;
+        // $kostenvoranschlag -= $abzug;
 
         // Angenommen, $kostenvoranschlag ist der Bruttopreis, Assume $estimate is the gross price
         $bruttopreis = ceil($kostenvoranschlag);
