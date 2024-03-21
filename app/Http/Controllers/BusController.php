@@ -118,7 +118,6 @@ class BusController extends Controller
     }
     public function bus_details($id)
     {
-
         $item = DB::table('bus_type')->where('id', $id)->where('is_deleted',0)->first();
         $price = DB::table('price_per_km')->where('bus_type_id',$item->id)->get();
         $html = view('component.busDetails', compact('item','price'))->render();

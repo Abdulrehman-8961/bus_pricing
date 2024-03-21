@@ -113,13 +113,13 @@ function isHighSeason($start_date, $end_date) {
     })
     ->where('is_deleted',0)
     ->get();
-    dd($priceChange);
     if (count($priceChange) > 0) {
         $totalPer = 0;
         foreach ($priceChange as $value) {
             $parts = explode('%',$value->presierhohung);
             $totalPer += $parts[0];
         }
+    // dd($totalPer);
         // dd($totalPer);
         return($totalPer);
     }
@@ -153,13 +153,17 @@ function berechneKostenFuerEinenBus($bustypen, $gewaehlter_bustyp, $entfernung, 
         // dd($parts);
         $fedralPer = $parts[0];
     }
+    $km_kosten = $this->berechneKmKosten($bustypen, $gewaehlter_bustyp, $entfernung);
     $totalPer = $this->isHighSeason($hinfahrtsdatum,$rueckfahrtdatum);
     if($totalPer > 0){
         $totalPer = $totalPer + $fedralPer;
         // dd($bus_type->$service_typ);
         $tageskosten = $bus_type->$service_typ*(1 + ($totalPer / 100));
+    $km_kosten = $km_kosten*(1 + ($totalPer / 100));
+    // dd($tageskosten);
     } else {
         $tageskosten = $bus_type->$service_typ*(1 + ($fedralPer / 100));
+        $km_kosten = $km_kosten*(1 + ($fedralPer / 100));
     }
 
     // if ($this->isHighSeason($hinfahrtsdatum)) {
@@ -172,7 +176,7 @@ function berechneKostenFuerEinenBus($bustypen, $gewaehlter_bustyp, $entfernung, 
     // }
 
     // Berechne den KM-Preis
-    $km_kosten = $this->berechneKmKosten($bustypen, $gewaehlter_bustyp, $entfernung);
+
 
     // dd($km_kosten);
 
@@ -189,6 +193,7 @@ function berechneKostenFuerEinenBus($bustypen, $gewaehlter_bustyp, $entfernung, 
 	     $fukmkalkulation =  $entfernung / $ergebnis;
 	     $ohnefukmkalkulation =  $entfernung ;
 	     $busBleibtVorOrt = $this->bleibtBusVorOrt($entfernung, $dauerInDezimaltagen);
+
     if ($busBleibtVorOrt && $fukmkalkulation >= 200 && $ergebnis !== 1) {
         // Wenn KM-Kosten höher sind, nimm die goldene Mitte
       return $km_kosten ;
@@ -198,6 +203,7 @@ function berechneKostenFuerEinenBus($bustypen, $gewaehlter_bustyp, $entfernung, 
        return $km_kosten;
     	}
      else {
+        // Sonst nimm den Tagessatz
         return $tageskosten;
 
     }
@@ -207,7 +213,6 @@ function berechneKostenFuerEinenBus($bustypen, $gewaehlter_bustyp, $entfernung, 
 
 function berechneKosten($bustypen, $gewaehlter_bustyp, $entfernung, $hinfahrtsdatum, $rueckfahrtdatum, $bundesland) {
     $gesamtkosten = 0;
-    // dd($gewaehlter_bustyp);
     if (is_array($gewaehlter_bustyp)) {
         // Handle multiple bus types
         foreach ($gewaehlter_bustyp as $bustyp => $anzahl) {
@@ -248,6 +253,7 @@ function berechneKosten($bustypen, $gewaehlter_bustyp, $entfernung, $hinfahrtsda
         if ($gewaehlter_bustyp) {
             // Führe die Kalkulation mit dem gewählten Bustyp durch
             $kostenvoranschlag = $this->berechneKosten($bustypen, $gewaehlter_bustyp, $entfernung, $hinfahrtsdatum, $rueckfahrtdatum, $bundesland);
+            // dd($kostenvoranschlag);
 
             // Berechne, ob der Bus vor Ort bleibt
             $busBleibtVorOrt = $this->bleibtBusVorOrt($entfernung, $dauerInDezimaltagen);
@@ -307,6 +313,9 @@ function berechneKosten($bustypen, $gewaehlter_bustyp, $entfernung, $hinfahrtsda
                 $zusaetzlicheInfo = "+ Fahrerunterkunft (Hinweis: gilt nicht für Fahrten am selben Tag)";
                 $note = "(Hinweis: gilt nicht für Fahrten am selben Tag)";
             }
+
+            // echo " Der Kostenvoranschlag beträgt: €" . number_format(ceil($kostenvoranschlag), 2, ',', '.') . "\n";
+            // echo $zusaetzlicheInfo . "\n";
 
         } else {
             // echo "Für die angegebene Personenanzahl ist kein passender Bustyp verfügbar.\n";
