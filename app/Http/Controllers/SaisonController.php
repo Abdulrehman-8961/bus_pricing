@@ -20,7 +20,7 @@ class SaisonController extends Controller
     {
         $title = $this->title;
         $startDate = null;
-    $endDate = null;
+        $endDate = null;
         $search = @$request->get('dateRange');
         if ($search) {
             $dateParts = explode(" - ", $search);
@@ -28,25 +28,25 @@ class SaisonController extends Controller
             $endDate = date("Y-m-d", strtotime($dateParts[1]));
         }
         $saison = DB::table('saison')
-        ->where('is_deleted','=',0)
-        ->where(function ($query) use ($search,$startDate,$endDate) {
-            if(!empty($search)) {
-                $query->where(function ($query) use ($startDate, $endDate) {
-                    $query->where('start_zeitraum', '<=', $startDate)
-                        ->where('end_zeitraum', '>=', $startDate);
-                })
-                ->orWhere(function ($query) use ($startDate, $endDate) {
-                    $query->where('start_zeitraum', '<=', $endDate)
-                        ->where('end_zeitraum', '>=', $endDate);
-                });
-            }
-        })
-        ->orderBy('id', 'desc')->paginate(20);
+            ->where('is_deleted', '=', 0)
+            ->where(function ($query) use ($search, $startDate, $endDate) {
+                if (!empty($search)) {
+                    $query->where(function ($query) use ($startDate, $endDate) {
+                        $query->where('start_zeitraum', '<=', $startDate)
+                            ->where('end_zeitraum', '>=', $startDate);
+                    })
+                        ->orWhere(function ($query) use ($startDate, $endDate) {
+                            $query->where('start_zeitraum', '<=', $endDate)
+                                ->where('end_zeitraum', '>=', $endDate);
+                        });
+                }
+            })
+            ->orderBy('id', 'desc')->paginate(20);
         $saison->appends([
-          "search" => $search,
+            "search" => $search,
         ]);
 
-        return view("saison.view", compact("saison","title","startDate", "endDate"));
+        return view("saison.view", compact("saison", "title", "startDate", "endDate"));
     }
     public function add()
     {
@@ -65,22 +65,22 @@ class SaisonController extends Controller
 
         $startDate = date("Y-m-d", strtotime($dateParts[0]));
         $endDate = date("Y-m-d", strtotime($dateParts[1]));
-            DB::table('saison')->insert([
-                "start_zeitraum" => $startDate,
-                "end_zeitraum" => $endDate,
-                "name" => $request->input('name'),
-                "presierhohung" => $request->input('presierhohung'),
-                "meldung" => $request->input('meldung')
-            ]);
-            return redirect()->back()->with('success', "Saison added");
+        DB::table('saison')->insert([
+            "start_zeitraum" => $startDate,
+            "end_zeitraum" => $endDate,
+            "name" => $request->input('name'),
+            "presierhohung" => $request->input('presierhohung'),
+            "meldung" => $request->input('meldung')
+        ]);
+        return redirect()->back()->with('success', "Saison added");
     }
     public function edit($id)
     {
         $title = $this->title;
         $saison = DB::table('saison')
-        ->where('id', $id)
-        ->first();
-        return view("saison.edit", compact("saison","title"));
+            ->where('id', $id)
+            ->first();
+        return view("saison.edit", compact("saison", "title"));
     }
     public function update(Request $request, $id)
     {

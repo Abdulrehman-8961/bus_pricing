@@ -31,26 +31,28 @@ class HomeController extends Controller
         $title = $this->title;
         $currentDate = date('Y-m-d');
         $nextSeasonData = DB::table('saison')
-        ->whereDate('start_zeitraum','>=',$currentDate)
-        ->whereDate('start_zeitraum','<=',date('Y-m-d', strtotime('+90 days')))
-        ->where('is_deleted',0)
-        ->get();
+            ->whereDate('start_zeitraum', '>=', $currentDate)
+            ->whereDate('start_zeitraum', '<=', date('Y-m-d', strtotime('+90 days')))
+            ->where('is_deleted', 0)
+            ->get();
         // dd($nextSeasonData);
-        return view('home',compact("title","nextSeasonData"));
+        return view('home', compact("title", "nextSeasonData"));
     }
 
-    public function setting(){
-        $setting = DB::table('support_setting')->where('id',1)->first();
-        return view('setting',compact("setting"));
+    public function setting()
+    {
+        $setting = DB::table('support_setting')->where('id', 1)->first();
+        return view('setting', compact("setting"));
     }
 
-    public function settingSave(Request $request){
+    public function settingSave(Request $request)
+    {
         $request->validate([
             "link" => 'required'
-            ]);
-        DB::table('support_setting')->where('id',1)->update([
+        ]);
+        DB::table('support_setting')->where('id', 1)->update([
             'link' => $request->input('link')
         ]);
-        return redirect()->back()->with('success','Link updated');
+        return redirect()->back()->with('success', 'Link updated');
     }
 }

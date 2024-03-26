@@ -29,8 +29,7 @@ class ProfileSettings extends Controller
                 Rule::unique('users', 'email')->ignore(Auth::user()->id),
             ]
         ]);
-        if($validated)
-        {
+        if ($validated) {
             DB::table('users')->where('id', Auth::user()->id)->update([
                 "name" => $request->input('name'),
                 "last_name" => $request->input('last_name'),
@@ -47,7 +46,7 @@ class ProfileSettings extends Controller
             "password" => 'required|min:6',
             "confirm_password" => 'required|same:password',
         ]);
-        if($validated) {
+        if ($validated) {
             DB::table('users')->where('id', Auth::user()->id)->update([
                 "password" => Hash::make($request->input('password')),
             ]);

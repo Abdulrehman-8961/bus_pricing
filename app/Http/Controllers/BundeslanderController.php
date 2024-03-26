@@ -22,22 +22,22 @@ class BundeslanderController extends Controller
         $title = $this->title;
         $search = @$request->get('search');
         $data = DB::table('bundeslander')
-        ->where('is_deleted','=',0)
-        ->where(function ($query) use ($search) {
-            // if(!empty($search)) {
-            //     $query->where('name', 'LIKE', '%'.$search.'%')
-            //     ->orWhere('last_name', 'LIKE', '%'.$search.'%')
-            //     ->orWhere('email', 'LIKE', '%'.$search.'%')
-            //     ->orWhere('phone', 'LIKE', '%'.$search.'%')
-            //     ->orWhere('address', 'LIKE', '%'.$search.'%');
-            // }
-        })
-        ->orderBy('id', 'desc')->paginate(20);
+            ->where('is_deleted', '=', 0)
+            ->where(function ($query) use ($search) {
+                // if(!empty($search)) {
+                //     $query->where('name', 'LIKE', '%'.$search.'%')
+                //     ->orWhere('last_name', 'LIKE', '%'.$search.'%')
+                //     ->orWhere('email', 'LIKE', '%'.$search.'%')
+                //     ->orWhere('phone', 'LIKE', '%'.$search.'%')
+                //     ->orWhere('address', 'LIKE', '%'.$search.'%');
+                // }
+            })
+            ->orderBy('id', 'desc')->paginate(20);
         $data->appends([
-          "search" => $search,
+            "search" => $search,
         ]);
 
-        return view("bundeslander.view", compact("data","title"));
+        return view("bundeslander.view", compact("data", "title"));
     }
     public function save(Request $request)
     {
@@ -51,10 +51,10 @@ class BundeslanderController extends Controller
             "presierhohung" => $request->input('presierhohung'),
             "meldung" => $request->input('meldung')
         ]);
-        if($request->hasFile('file')){
+        if ($request->hasFile('file')) {
             $fileNames = [];
             $file = $request->file('file');
-            foreach ($file as $f){
+            foreach ($file as $f) {
                 $filePath = $f->getClientOriginalName();
                 $fileType = $f->getMimeType();
                 $f->move(public_path('uploads'), $filePath);
@@ -72,11 +72,11 @@ class BundeslanderController extends Controller
     {
         $title = $this->title;
         $data = DB::table('bundeslander')
-        ->where('id', $id)
-        ->first();
+            ->where('id', $id)
+            ->first();
         $files = DB::table('bundeslander_files')->where('bundeslander_id', $id)->get();
 
-        return view("bundeslander.edit", compact("data","files","title"));
+        return view("bundeslander.edit", compact("data", "files", "title"));
     }
     public function update(Request $request, $id)
     {
@@ -93,10 +93,10 @@ class BundeslanderController extends Controller
             "updated_at" => date("Y-m-d H:i:s")
         ]);
 
-        if($request->hasFile('file')){
+        if ($request->hasFile('file')) {
             $fileNames = [];
             $file = $request->file('file');
-            foreach ($file as $f){
+            foreach ($file as $f) {
                 $filePath = $f->getClientOriginalName();
                 $fileType = $f->getMimeType();
                 $f->move(public_path('uploads'), $filePath);
@@ -141,25 +141,25 @@ class BundeslanderController extends Controller
     }
 
     public function downloadFiles($id)
-{
-    $fileNames = DB::table('bundeslander_files')->where('bundeslander_id', $id)->pluck('name');
+    {
+        $fileNames = DB::table('bundeslander_files')->where('bundeslander_id', $id)->pluck('name');
 
-    $zip = new ZipArchive;
-    $zipFileName = 'files.zip';
-    $zipFilePath = sys_get_temp_dir() . '/' . $zipFileName;
+        $zip = new ZipArchive;
+        $zipFileName = 'files.zip';
+        $zipFilePath = sys_get_temp_dir() . '/' . $zipFileName;
 
-    if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
-        foreach ($fileNames as $fileName) {
-            $fileContent = public_path("uploads/{$fileName}");
-            $zip->addFile($fileContent, $fileName);
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
+            foreach ($fileNames as $fileName) {
+                $fileContent = public_path("uploads/{$fileName}");
+                $zip->addFile($fileContent, $fileName);
+            }
+
+            $zip->close();
+
+            // Stream the zip file to the user for download
+            return response()->download($zipFilePath)->deleteFileAfterSend(true);
+        } else {
+            return response()->json(['message' => 'Failed to create zip archive'], 500);
         }
-
-        $zip->close();
-
-        // Stream the zip file to the user for download
-        return response()->download($zipFilePath)->deleteFileAfterSend(true);
-    } else {
-        return response()->json(['message' => 'Failed to create zip archive'], 500);
     }
-}
 }

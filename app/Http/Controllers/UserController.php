@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'verified','isAdmin']);
+        $this->middleware(['auth', 'verified', 'isAdmin']);
         $this->title = "Mitarbeiter";
     }
 
@@ -21,21 +21,21 @@ class UserController extends Controller
         $title = $this->title;
         $search = @$request->get('search');
         $users = DB::table('users')
-        ->where(function ($query) use ($search) {
-            if(!empty($search)) {
-                $query->where('name', 'LIKE', '%'.$search.'%')
-                ->orWhere('last_name', 'LIKE', '%'.$search.'%')
-                ->orWhere('email', 'LIKE', '%'.$search.'%')
-                ->orWhere('phone', 'LIKE', '%'.$search.'%')
-                ->orWhere('address', 'LIKE', '%'.$search.'%');
-            }
-        })
-        ->orderBy('id', 'desc')->paginate(20);
+            ->where(function ($query) use ($search) {
+                if (!empty($search)) {
+                    $query->where('name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('last_name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('email', 'LIKE', '%' . $search . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $search . '%')
+                        ->orWhere('address', 'LIKE', '%' . $search . '%');
+                }
+            })
+            ->orderBy('id', 'desc')->paginate(20);
         $users->appends([
-          "search" => $search,
+            "search" => $search,
         ]);
 
-        return view("users.user", compact("users","title"));
+        return view("users.user", compact("users", "title"));
     }
     public function add()
     {
@@ -50,7 +50,7 @@ class UserController extends Controller
             "password" => 'required|min:6',
             "confirm_password" => 'required|same:password'
         ]);
-        if($validated) {
+        if ($validated) {
             DB::table('users')->insert([
                 "name" => $request->input('name'),
                 "last_name" => $request->input('last_name'),
@@ -68,10 +68,9 @@ class UserController extends Controller
     {
         $title = $this->title;
         $user = DB::table('users')
-        ->where('id', $id)
-        ->first();
-            return view("users.UsersEdit", compact("user","title"));
-
+            ->where('id', $id)
+            ->first();
+        return view("users.UsersEdit", compact("user", "title"));
     }
     public function update(Request $request, $id)
     {
@@ -84,7 +83,7 @@ class UserController extends Controller
                 Rule::unique('users', 'email')->ignore($id)
             ]
         ]);
-        if($validated) {
+        if ($validated) {
             DB::table('users')->where('id', $id)->update([
                 "name" => $request->input('name'),
                 "last_name" => $request->input('last_name'),
@@ -103,7 +102,7 @@ class UserController extends Controller
             "password" => 'required|min:6',
             "confirm_password" => 'required|same:password',
         ]);
-        if($validated) {
+        if ($validated) {
             DB::table('users')->where('id', $id)->update([
                 "password" => Hash::make($request->input('password')),
                 "updated_at" => date("Y-m-d H:i:s")
