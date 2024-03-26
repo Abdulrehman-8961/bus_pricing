@@ -127,7 +127,7 @@
             color: #000000 !important;
         }
     }
-
+    
     @media (max-width: 991.98px){
         .navbar-collapse {
     margin-top: -75px !important;
@@ -198,13 +198,13 @@
                                 <span class="hide-menu">Saison</span>
                             </a>
                         </li>
-
+                        
                         <li class="sidebar-item has-arrow">
                             <a class="sidebar-link" href="{{ url('/Bundesland') }}" aria-expanded="false">
                                 <span class="d-flex">
                                     {{-- <i class="ti ti-users"></i> --}}
                                 </span>
-                                <span class="hide-menu">Bundesl채nder</span>
+                                <span class="hide-menu">Bundesländer</span>
                             </a>
                         </li>
                         <li class="sidebar-item has-arrow">
