@@ -72,19 +72,28 @@
     $(".shawCalRanges").daterangepicker();
 
     $('.customInput').on('input', function() {
-                var value = $(this).val().replace(/[^\d.]/g,
-                    ''); // Remove non-numeric and non-decimal characters
-                var parts = value.split('.');
-                if (parts.length > 1) {
-                    // Limit to 2 digits before the decimal point and 3 digits after
-                    parts[0] = parts[0].slice(0, 2);
-                    parts[1] = parts[1].slice(0, 3);
-                    value = parts.join('.');
-                } else {
-                    // Limit to 2 digits
-                    value = value.slice(0, 2);
-                }
-                $(this).val(value + '%');
-            });
+            var value = $(this).val().replace(/[^\d.\-+]/g, ''); // Allow +, -, numeric, and decimal characters
+            var prefix = ''; // Initialize prefix
+            if (value.charAt(0) === '-') {
+                prefix = '-';
+                value = value.substring(1); // Remove the first character if it's -
+            } else if (value.charAt(0) === '+') {
+                prefix = '+';
+                value = value.substring(1); // Remove the first character if it's +
+            } else {
+                prefix = '+';
+            }
+            var parts = value.split('.');
+            if (parts.length > 1) {
+                // Limit to 2 digits before the decimal point and 3 digits after
+                parts[0] = parts[0].slice(0, 2);
+                parts[1] = parts[1].slice(0, 3);
+                value = parts.join('.');
+            } else {
+                // Limit to 2 digits
+                value = value.slice(0, 2);
+            }
+            $(this).val(prefix + value + '%');
+        });
 </script>
 @endsection

@@ -73,7 +73,9 @@
         <form id="search-form" class="container-fluid" method="GET" action="{{ url()->current() }}">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12 mb-3 py-3 px-2 d-flex" style="background-color: #fff;">
-                    <i class="ti ti-search fs-8 me-3"></i><input type="text" value="{{ date('m/d/Y',strtotime(@$startDate ?? now())) }} - {{ date('m/d/Y',strtotime(@$endDate ?? now())) }}" class="form-control shawCalRanges2" name="dateRange" id="dateRange">
+                    <i class="ti ti-search fs-8 me-3"></i><input type="text"
+                        value="{{ date('m/d/Y', strtotime(@$startDate ?? now())) }} - {{ date('m/d/Y', strtotime(@$endDate ?? now())) }}"
+                        class="form-control shawCalRanges2" name="dateRange" id="dateRange">
                 </div>
             </div>
         </form>
@@ -136,7 +138,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal">+ {{ $row->presierhohung }}</p>
+                                        <p class="mb-0 fw-normal">{{ $row->presierhohung }}</p>
                                     </td>
                                     <td>
                                         <p class="mb-0 fw-normal">{{ $row->meldung }}</p>
@@ -188,13 +190,22 @@
         })
         $(".shawCalRanges").daterangepicker();
         $(".shawCalRanges2").daterangepicker();
-        $(".shawCalRanges2").on('change',function(){
+        $(".shawCalRanges2").on('change', function() {
             $('#search-form').submit();
         });
 
         $('.customInput').on('input', function() {
-            var value = $(this).val().replace(/[^\d.]/g,
-                ''); // Remove non-numeric and non-decimal characters
+            var value = $(this).val().replace(/[^\d.\-+]/g, ''); // Allow +, -, numeric, and decimal characters
+            var prefix = ''; // Initialize prefix
+            if (value.charAt(0) === '-') {
+                prefix = '-';
+                value = value.substring(1); // Remove the first character if it's -
+            } else if (value.charAt(0) === '+') {
+                prefix = '+';
+                value = value.substring(1); // Remove the first character if it's +
+            } else {
+                prefix = '+';
+            }
             var parts = value.split('.');
             if (parts.length > 1) {
                 // Limit to 2 digits before the decimal point and 3 digits after
@@ -205,7 +216,7 @@
                 // Limit to 2 digits
                 value = value.slice(0, 2);
             }
-            $(this).val(value + '%');
+            $(this).val(prefix + value + '%');
         });
     </script>
 @endsection

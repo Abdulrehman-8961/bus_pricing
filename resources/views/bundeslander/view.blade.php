@@ -68,13 +68,13 @@
                         </div>
                         <div class="more-fields"></div>
                         <div class="row">
-                            <div class="col-lg-1">
+                            <div class="col-lg-2">
                                 <button type="button" class="btn btn-submit mt-3 add-more px-2 mb-5"><i
                                         class="fa fa-plus"></i>
-                                    Add More</button>
+                                        Mehr hinzufügen</button>
                             </div>
                             <div class="col-md-12 mb-4 mt-3">
-                                <button type="submit" class="btn btn-success me-2">speichern</button>
+                                <button type="submit" class="btn btn-success me-2">Speichern</button>
                                 <button type="button" onclick="window.location.reload();"
                                     class="btn btn-submit">Löschen</button>
                             </div>

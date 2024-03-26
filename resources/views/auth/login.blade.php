@@ -17,6 +17,29 @@
     <!--<link rel="shortcut icon" type="image/png" href="{{ asset('public') }}/dist/images/logos/favicon.ico" />-->
     <!-- Core Css -->
     <link id="themeColors" rel="stylesheet" href="{{ asset('public') }}/dist/css/style.min.css" />
+    <style>
+        .radial-gradient::before {
+            background: #ffffff;
+        }
+
+        .btn-submit {
+            margin: 2px;
+            border-radius: 0px;
+            background-image: linear-gradient(161deg, #990B0C 82%, #990B0C 100%);
+            color: #fff;
+            padding-right: 20px;
+            padding-left: 20px;
+        }
+
+        .card {
+            box-shadow: none !important;
+        }
+
+        .form-check-input.primary:checked {
+            background-color: #990B0C;
+            border: #990B0C;
+        }
+    </style>
 </head>
 
 <body>
@@ -31,27 +54,14 @@
     <!--  Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-sidebartype="full"
         data-sidebar-position="fixed" data-header-position="fixed">
-        <div class="position-relative overflow-hidden radial-gradient min-vh-100">
-            <div class="position-relative z-index-5">
-                <div class="row">
-                    <div class="col-xl-7 col-xxl-8">
-                        {{-- <a href="#" class="text-nowrap logo-img d-block px-4 py-9 w-100">
-                            <img src="{{ asset('public') }}/dist/images/logos/dark-logo.svg" width="180"
-                                alt="">
-                        </a> --}}
-                        <div class="d-none d-xl-flex align-items-center justify-content-center"
-                            style="height: calc(100vh - 80px);">
-                            <img src="{{ asset('public') }}/dist/images/backgrounds/login-security.svg" alt=""
-                                class="img-fluid" width="500">
-                        </div>
-                    </div>
-                    <div class="col-xl-5 col-xxl-4">
-                        <div
-                            class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
-                            <div class="col-sm-8 col-md-6 col-xl-9">
-                                <h2 class="mb-3 fs-7 fw-bolder">Welcome to You Dashboard</h2>
-                                <p class=" mb-9">Your Admin Dashboard</p>
-
+        <div
+            class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center justify-content-center w-100">
+                <div class="row justify-content-center w-100">
+                    <div class="col-md-8 col-lg-6 col-xxl-3">
+                        <div class="card mb-0">
+                            <div class="card-body">
+                                <h4 class="mb-3">Anmelden</h4>
                                 <form method="POST" action="{{ route('login') }}">
                                     @csrf
                                     <div class="mb-3">
@@ -69,8 +79,8 @@
                                     <div class="mb-4">
                                         <label for="exampleInputPassword1" class="form-label">Password</label>
                                         <input id="password" type="password"
-                                            class="form-control @error('password') is-invalid @enderror"
-                                            name="password" required autocomplete="current-password">
+                                            class="form-control @error('password') is-invalid @enderror" name="password"
+                                            required autocomplete="current-password">
                                         @error('password')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -80,28 +90,20 @@
                                     <div class="d-flex align-items-center justify-content-between mb-4">
                                         <div class="form-check">
                                             <input class="form-check-input primary" type="checkbox" value=""
-                                                id="flexCheckChecked" checked>
+                                                id="flexCheckChecked">
                                             <label class="form-check-label text-dark" for="flexCheckChecked">
                                                 Remeber this Device
                                             </label>
                                         </div>
-                                        <a class="text-primary fw-medium"
-                                            href="{{ route('password.request') }}">Forgot Password ?</a>
                                     </div>
-                                    <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Sign
+                                    <button type="submit" class="btn btn-submit w-100 py-8 mb-4">Sign
                                         In</button>
-                                    <div class="d-flex align-items-center justify-content-center">
-                                        <p class="fs-4 mb-0 fw-medium">New here?</p>
-                                        <a class="text-primary fw-medium ms-2"
-                                            href="{{ route('register') }}">Create an account</a>
-                                    </div>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
