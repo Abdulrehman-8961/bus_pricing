@@ -7,6 +7,7 @@ use App\Http\Controllers\BusController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SaisonController;
 use App\Http\Controllers\BundeslanderController;
+use App\Http\Controllers\LeadsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,3 +75,11 @@ Route::get('/Delete/image/{id}', [BundeslanderController::class, 'deleteImg'])->
 Route::get('/Link', [App\Http\Controllers\HomeController::class, 'setting'])->middleware("isAdmin");
 Route::post('/Link/save', [App\Http\Controllers\HomeController::class, 'settingSave'])->middleware("isAdmin");
 
+
+Route::get('/Leads', [LeadsController::class, 'view'])->middleware('isAdminDispatcher');
+// Route::get('/Employee/add', [UserController::class, 'add'])->middleware('isAdmin');
+// Route::post('/Employee/save', [UserController::class, 'save'])->middleware('isAdmin');
+// Route::get('/Employee/edit/{id}', [UserController::class, 'edit'])->middleware('isAdmin');
+// Route::post('/Employee/update/{id}', [UserController::class, 'update'])->middleware('isAdmin');
+// Route::post('/Employee/update-password/{id}', [UserController::class, 'update_password'])->middleware('isAdmin');
+// Route::get('/Employee/delete/{id}', [UserController::class, 'delete'])->middleware('isAdmin');

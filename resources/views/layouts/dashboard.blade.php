@@ -112,7 +112,7 @@
     }
 
     .btn:hover {
-        color: #fff !important;
+        color: none !important;
         border-color: none !important;
     }
 
@@ -225,6 +225,14 @@
                                 </a>
                             </li>
                         @endif
+                        <li class="sidebar-item has-arrow">
+                            <a class="sidebar-link" href="{{ url('/Leads') }}" aria-expanded="false">
+                                <span class="d-flex">
+                                    {{-- <i class="ti ti-users"></i> --}}
+                                </span>
+                                <span class="hide-menu">Leads</span>
+                            </a>
+                        </li>
                         @php
                             $support = DB::table('support_setting')->where('id', 1)->first();
                         @endphp
