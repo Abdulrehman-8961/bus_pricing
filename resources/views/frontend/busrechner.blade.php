@@ -226,3 +226,15 @@
         </div>
     </div>
 @endsection
+@section('javascript')
+<script>
+    document.getElementById('hinfahrtsdatum').addEventListener('change', function() {
+        var hinfahrtsdatum = this.value;
+        var rueckfahrtdatumElement = document.getElementById('rueckfahrtdatum');
+
+        if (rueckfahrtdatumElement.value === '' || new Date(rueckfahrtdatumElement.value) < new Date(hinfahrtsdatum)) {
+            rueckfahrtdatumElement.value = hinfahrtsdatum;
+        }
+    });
+</script>
+@endsection

@@ -233,6 +233,22 @@
                                 <span class="hide-menu">Leads</span>
                             </a>
                         </li>
+                        <li class="sidebar-item has-arrow">
+                            <a class="sidebar-link" href="{{ url('/Stammdaten') }}" aria-expanded="false">
+                                <span class="d-flex">
+                                    {{-- <i class="ti ti-users"></i> --}}
+                                </span>
+                                <span class="hide-menu">Stammdaten</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item has-arrow">
+                            <a class="sidebar-link" href="{{ url('/Bus-Partner') }}" aria-expanded="false">
+                                <span class="d-flex">
+                                    {{-- <i class="ti ti-users"></i> --}}
+                                </span>
+                                <span class="hide-menu">Bus Partner</span>
+                            </a>
+                        </li>
                         @php
                             $support = DB::table('support_setting')->where('id', 1)->first();
                         @endphp

@@ -8,6 +8,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SaisonController;
 use App\Http\Controllers\BundeslanderController;
 use App\Http\Controllers\LeadsController;
+use App\Http\Controllers\StammdatenController;
+use App\Http\Controllers\BusPartnerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +81,23 @@ Route::post('/Link/save', [App\Http\Controllers\HomeController::class, 'settingS
 Route::get('/Leads', [LeadsController::class, 'view'])->middleware('isAdminDispatcher');
 // Route::get('/Employee/add', [UserController::class, 'add'])->middleware('isAdmin');
 // Route::post('/Employee/save', [UserController::class, 'save'])->middleware('isAdmin');
+// Route::get('/Employee/edit/{id}', [UserController::class, 'edit'])->middleware('isAdmin');
+// Route::post('/Employee/update/{id}', [UserController::class, 'update'])->middleware('isAdmin');
+// Route::post('/Employee/update-password/{id}', [UserController::class, 'update_password'])->middleware('isAdmin');
+// Route::get('/Employee/delete/{id}', [UserController::class, 'delete'])->middleware('isAdmin');
+
+
+Route::get('/Stammdaten', [StammdatenController::class, 'view'])->middleware('isAdminDispatcher');
+// Route::get('/Employee/add', [UserController::class, 'add'])->middleware('isAdmin');
+// Route::post('/Employee/save', [UserController::class, 'save'])->middleware('isAdmin');
+// Route::get('/Employee/edit/{id}', [UserController::class, 'edit'])->middleware('isAdmin');
+// Route::post('/Employee/update/{id}', [UserController::class, 'update'])->middleware('isAdmin');
+// Route::post('/Employee/update-password/{id}', [UserController::class, 'update_password'])->middleware('isAdmin');
+// Route::get('/Employee/delete/{id}', [UserController::class, 'delete'])->middleware('isAdmin');
+
+
+Route::get('/Bus-Partner', [BusPartnerController::class, 'view'])->middleware('isAdminDispatcher');
+Route::post('/Bus-Partner/save', [BusPartnerController::class, 'save'])->middleware('isAdmin');
 // Route::get('/Employee/edit/{id}', [UserController::class, 'edit'])->middleware('isAdmin');
 // Route::post('/Employee/update/{id}', [UserController::class, 'update'])->middleware('isAdmin');
 // Route::post('/Employee/update-password/{id}', [UserController::class, 'update_password'])->middleware('isAdmin');

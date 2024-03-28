@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Auth;
 
-class LeadsController extends Controller
+class StammdatenController extends Controller
 {
     public function __construct()
     {
         $this->middleware(['auth', 'verified', 'isAdmin']);
-        $this->title = "Leads";
+        $this->title = "Stammdaten";
     }
 
     public function view(Request $request)
@@ -35,7 +35,7 @@ class LeadsController extends Controller
         //     "search" => $search,
         // ]);
 
-        return view("leads.view", compact("title"));
+        return view("stammdaten.view", compact("title"));
     }
     public function add()
     {
