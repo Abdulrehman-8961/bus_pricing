@@ -3,11 +3,11 @@
 @section('content')
     <div class="container-fluid mw-100">
         @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Dispatcher')
-        <div class="row mb-5">
-            <div class="text-end">
-                <input type="button" id="btn-add" class="btn btn-submit" value="NEU HINZUFÜGEN">
+            <div class="row mb-5">
+                <div class="text-end">
+                    <input type="button" id="btn-add" class="btn btn-submit" value="NEU HINZUFÜGEN">
+                </div>
             </div>
-        </div>
         @endif
 
         <div class="card w-100 position-relative overflow-hidden add-bus-card {{ $errors->any() ? '' : 'd-none' }}">
@@ -130,13 +130,13 @@
                             <div class="col-lg-2">
                                 <button type="button" class="btn btn-submit mt-3 add-more px-2 mb-5"><i
                                         class="fa fa-plus"></i>
-                                        Mehr hinzufügen</button>
+                                    Mehr hinzufügen</button>
 
                             </div>
                             <div class="col-md-12 mb-4">
-                                <button type="submit" class="btn btn-success me-2">speichern</button>
-                            <button type="button" onclick="window.location.reload();"
-                                class="btn btn-submit">Löschen</button>
+                                <button type="submit" class="btn btn-success me-2">Speichern</button>
+                                <button type="button" onclick="window.location.reload();"
+                                    class="btn btn-submit">Löschen</button>
                             </div>
                         </div>
                 </form>
@@ -230,11 +230,11 @@
                                                         class="fs-4 ti ti-info-circle"></i>Details</a>
                                             </li>
                                             @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Dispatcher')
-                                            <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-3"
-                                                    href="{{ url('/Bus-Type/Edit/' . $row->id) }}"><i
-                                                        class="fs-4 ti ti-edit"></i>Edit</a>
-                                            </li>
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-3"
+                                                        href="{{ url('/Bus-Type/Edit/' . $row->id) }}"><i
+                                                            class="fs-4 ti ti-edit"></i>Edit</a>
+                                                </li>
                                             @endif
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3 delete"

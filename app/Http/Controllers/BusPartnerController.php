@@ -84,44 +84,33 @@ class BusPartnerController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            "name" => 'required',
-            "role" => 'required',
-            "email" => [
-                "required",
-                "email",
-                Rule::unique('users', 'email')->ignore($id)
-            ]
+            "lieferanten" => 'required',
+            "firmnname" => 'required',
+            "adresse" => 'required',
+            "stadt" => 'required',
+            "bundesland" => 'required',
+            "plz" => 'required',
+            "bustype" => 'required',
         ]);
         if ($validated) {
-            DB::table('users')->where('id', $id)->update([
-                "name" => $request->input('name'),
-                "last_name" => $request->input('last_name'),
-                "email" => $request->input('email'),
-                "phone" => $request->input('phone_number'),
-                "role" => $request->input('role'),
-                "address" => $request->input('address'),
+            DB::table('bus_partner')->where('id', $id)->update([
+                "lieferanten" => $request->input('lieferanten'),
+                "firmnname" => $request->input('firmnname'),
+                "adresse" => $request->input('adresse'),
+                "stadt" => $request->input('stadt'),
+                "bundesland" => $request->input('bundesland'),
+                "plz" => $request->input('plz'),
+                "bustype" => $request->input('bustype'),
                 "updated_at" => date("Y-m-d H:i:s")
             ]);
-            return redirect()->back()->with('success', 'User Profile updated');
-        }
-    }
-    public function update_password(Request $request, $id)
-    {
-        $validated = $request->validate([
-            "password" => 'required|min:6',
-            "confirm_password" => 'required|same:password',
-        ]);
-        if ($validated) {
-            DB::table('users')->where('id', $id)->update([
-                "password" => Hash::make($request->input('password')),
-                "updated_at" => date("Y-m-d H:i:s")
-            ]);
-            return redirect()->back()->with('success', 'User password updated');
+            return redirect()->back()->with('success', 'Bus partner updated');
         }
     }
     public function delete($id)
     {
-        DB::table('users')->where('role', '!=', 'Amdin')->where('id', $id)->delete();
-        return redirect()->back()->with('success', 'User deleted');
+        DB::table('bus_partner')->where('id', $id)->update([
+            'is_deleted' => 1
+        ]);
+        return redirect()->back()->with('success', 'Bus partner deleted');
     }
 }

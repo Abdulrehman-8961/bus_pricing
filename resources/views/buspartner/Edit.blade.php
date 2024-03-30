@@ -49,55 +49,54 @@
                             </div>
                         </div>
                         <div class="col-lg-3 col-12">
+                            <div class="mb-3">
+                                <label for="stadt" class="form-label">Stadt</label>
+                                <input type="text" class="form-control @error('stadt') is-invalid @enderror"
+                                    value="{{ $data->stadt }}" name="stadt" id="stadt"
+                                    aria-describedby="stadt">
+                                @error('stadt')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        @php
+                            $bundesland = DB::table('bundeslander')->where('is_deleted',0)->get();
+                            $bustype = DB::table('bus_type')->where('is_deleted',0)->get();
+                        @endphp
+                        <div class="col-lg-3 col-12">
                             <div class="mb-4">
-                                <label for="role" class="form-label">Role</label>
-                                <select class="form-control" name="role" id="role">
-                                    <option value="">Select Value</option>
-                                    <option value="Admin" {{ $data->role == 'Admin' ? 'selected' : '' }}>Admin</option>
-                                    <option value="Dispatcher" {{ $data->role == 'Dispatcher' ? 'selected' : '' }}>
-                                        Dispatcher</option>
-                                    <option value="Employee" {{ $data->role == 'Employee' ? 'selected' : '' }}>Employee
-                                    </option>
+                                <label for="bundesland" class="form-label">Bundesland</label>
+                                <select class="form-control" name="bundesland" id="bundesland">
+                                    <option value="">Select Bundesland</option>
+                                    @foreach($bundesland as $row)
+                                    <option value="{{ $row->id }}" {{ $data->bundesland == $row->id ? 'selected' : '' }}>{{ $row->bundsland }}</option>
+                                    @endforeach
                                 </select>
-                                @error('phone_number')
+                                @error('bundesland')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-12 mb-4">
-                            <button type="submit" class="btn btn-success me-2">speichern</button>
-                            <button type="button" onclick="window.location.reload();"
-                                class="btn btn-submit">Löschen</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="card w-100 position-relative overflow-hidden">
-            {{-- <div class="px-4 py-3 border-bottom d-flex justify-content-between">
-                <h5 class="card-title fw-semibold mb-0 lh-sm">Edit Password</h5>
-
-            </div> --}}
-            <div class="card-body p-4">
-                <form method="POST" class="container-fluid" action="{{ url('/Employee/update-password/' . $data->id) }}">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-4 col-lg-3 col-12 ">
+                        <div class="col-lg-3 col-12 ">
                             <div class="mb-4">
-                                <label for="exampleInputPassword1" class="form-label">Password</label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                    name="password" id="exampleInputPassword1">
-                                @error('password')
+                                <label for="plz" class="form-label">PLZ</label>
+                                <input type="text" class="form-control @error('plz') is-invalid @enderror"
+                                    name="plz" id="plz" value="{{ $data->plz }}">
+                                @error('plz')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-4 col-lg-3 col-12 ">
+                        <div class="col-lg-3 col-12">
                             <div class="mb-4">
-                                <label for="exampleInputPassword2" class="form-label">Password Confirmation</label>
-                                <input type="password" class="form-control @error('confirm_password') is-invalid @enderror"
-                                    name="confirm_password" id="exampleInputPassword2">
-                                @error('confirm_password')
+                                <label for="bustype" class="form-label">Bustypen</label>
+                                <select class="form-control" name="bustype" id="bustype">
+                                    <option value="">Select Bus</option>
+                                    @foreach($bustype as $row)
+                                    <option value="{{ $row->id }}" {{ $data->bustype == $row->id ? 'selected' : '' }}>{{ $row->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('bustype')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>

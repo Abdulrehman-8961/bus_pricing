@@ -98,7 +98,6 @@ Route::get('/Stammdaten', [StammdatenController::class, 'view'])->middleware('is
 
 Route::get('/Bus-Partner', [BusPartnerController::class, 'view'])->middleware('isAdminDispatcher');
 Route::post('/Bus-Partner/save', [BusPartnerController::class, 'save'])->middleware('isAdmin');
-// Route::get('/Employee/edit/{id}', [UserController::class, 'edit'])->middleware('isAdmin');
-// Route::post('/Employee/update/{id}', [UserController::class, 'update'])->middleware('isAdmin');
-// Route::post('/Employee/update-password/{id}', [UserController::class, 'update_password'])->middleware('isAdmin');
-// Route::get('/Employee/delete/{id}', [UserController::class, 'delete'])->middleware('isAdmin');
+Route::get('/Bus-Partner/edit/{id}', [BusPartnerController::class, 'edit'])->middleware('isAdmin');
+Route::post('/Bus-Partner/update/{id}', [BusPartnerController::class, 'update'])->middleware('isAdmin');
+Route::get('/Bus-Partner/delete/{id}', [BusPartnerController::class, 'delete'])->middleware('isAdmin');

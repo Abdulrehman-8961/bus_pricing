@@ -110,13 +110,13 @@
                                                 @if (Auth::user()->role == 'Admin')
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                                            href="#"><i
+                                                            href="{{ url('Bus-Partner/edit') }}/{{ $row->id }}"><i
                                                                 class="fs-4 ti ti-edit"></i>Edit</a>
                                                     </li>
                                                 @endif
                                                 <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-3 delete"
-                                                        href="#"><i
+                                                        href="{{ url('Bus-Partner/delete') }}/{{ $row->id }}"><i
                                                             class="fs-4 ti ti-trash"></i>Delete</a>
                                                 </li>
                                             </ul>
