@@ -10,6 +10,7 @@ use App\Http\Controllers\BundeslanderController;
 use App\Http\Controllers\LeadsController;
 use App\Http\Controllers\StammdatenController;
 use App\Http\Controllers\BusPartnerController;
+use App\Http\Controllers\AbwicklungController;
 
 /*
 |--------------------------------------------------------------------------
@@ -101,3 +102,5 @@ Route::post('/Bus-Partner/save', [BusPartnerController::class, 'save'])->middlew
 Route::get('/Bus-Partner/edit/{id}', [BusPartnerController::class, 'edit'])->middleware('isAdmin');
 Route::post('/Bus-Partner/update/{id}', [BusPartnerController::class, 'update'])->middleware('isAdmin');
 Route::get('/Bus-Partner/delete/{id}', [BusPartnerController::class, 'delete'])->middleware('isAdmin');
+
+Route::get('/Abwicklung',[AbwicklungController::class, 'view'])->middleware('isAdminDispatcher');
