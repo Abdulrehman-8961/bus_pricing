@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -19,100 +20,32 @@ class LeadsController extends Controller
     public function view(Request $request)
     {
         $title = $this->title;
-        $search = @$request->get('search');
-        // $users = DB::table('users')
-        //     ->where(function ($query) use ($search) {
-        //         if (!empty($search)) {
-        //             $query->where('name', 'LIKE', '%' . $search . '%')
-        //                 ->orWhere('last_name', 'LIKE', '%' . $search . '%')
-        //                 ->orWhere('email', 'LIKE', '%' . $search . '%')
-        //                 ->orWhere('phone', 'LIKE', '%' . $search . '%')
-        //                 ->orWhere('address', 'LIKE', '%' . $search . '%');
-        //         }
-        //     })
-        //     ->orderBy('id', 'desc')->paginate(20);
-        // $users->appends([
-        //     "search" => $search,
-        // ]);
+        // $lead = DB::table('db7_forms')->where('form_id',2085)->first();
+        // var_dump($lead->form_value);
+        // exit;
+        // $leadData = unserialize($lead->form_value);
+        // $leadData = [
+        //     'firstName' => 'Sara',
+        //     'lastName' => 'Blum-Kantarowska'
+        // ];
+
+        // $lexofficeApiUrl = 'https://api.lexoffice.io/v1/contacts';
+
+        // $response = Http::withHeaders([
+        //     'Authorization' => 'Bearer iwnyrX7KxxpmvHDMaJcy60_I7z0TD3J9D2S6jOvxrFbBcQ4E',
+        //     'Content-Type' => 'application/json',
+        // ])->post($lexofficeApiUrl, $leadData);
+        // dd($response);
+
+        // if ($response->successful()) {
+        //     $lexofficeCustomerId = $response->json()['id'];
+        //     // Store $lexofficeCustomerId in your local database for future reference
+        //     // You can also redirect or return a success response
+        // } else {
+        //     // Handle error (e.g., log or notify admin)
+        //     // You can redirect or return an error response
+        // }
 
         return view("leads.view", compact("title"));
-    }
-    public function add()
-    {
-        return view("users.UsersAdd");
-    }
-    public function save(Request $request)
-    {
-        $validated = $request->validate([
-            "name" => 'required',
-            "role" => 'required',
-            "email" => 'required|email|unique:users',
-            "password" => 'required|min:6',
-            "confirm_password" => 'required|same:password'
-        ]);
-        if ($validated) {
-            DB::table('users')->insert([
-                "name" => $request->input('name'),
-                "last_name" => $request->input('last_name'),
-                "email" => $request->input('email'),
-                "phone" => $request->input('phone_number'),
-                "address" => $request->input('address'),
-                "role" => $request->input('role'),
-                "password" => Hash::make($request->input('password')),
-                "created_at" => date("Y-m-d H:i:s")
-            ]);
-            return redirect()->back()->with('success', "User added");
-        }
-    }
-    public function edit($id)
-    {
-        $title = $this->title;
-        $user = DB::table('users')
-            ->where('id', $id)
-            ->first();
-        return view("users.UsersEdit", compact("user", "title"));
-    }
-    public function update(Request $request, $id)
-    {
-        $validated = $request->validate([
-            "name" => 'required',
-            "role" => 'required',
-            "email" => [
-                "required",
-                "email",
-                Rule::unique('users', 'email')->ignore($id)
-            ]
-        ]);
-        if ($validated) {
-            DB::table('users')->where('id', $id)->update([
-                "name" => $request->input('name'),
-                "last_name" => $request->input('last_name'),
-                "email" => $request->input('email'),
-                "phone" => $request->input('phone_number'),
-                "role" => $request->input('role'),
-                "address" => $request->input('address'),
-                "updated_at" => date("Y-m-d H:i:s")
-            ]);
-            return redirect()->back()->with('success', 'User Profile updated');
-        }
-    }
-    public function update_password(Request $request, $id)
-    {
-        $validated = $request->validate([
-            "password" => 'required|min:6',
-            "confirm_password" => 'required|same:password',
-        ]);
-        if ($validated) {
-            DB::table('users')->where('id', $id)->update([
-                "password" => Hash::make($request->input('password')),
-                "updated_at" => date("Y-m-d H:i:s")
-            ]);
-            return redirect()->back()->with('success', 'User password updated');
-        }
-    }
-    public function delete($id)
-    {
-        DB::table('users')->where('role', '!=', 'Amdin')->where('id', $id)->delete();
-        return redirect()->back()->with('success', 'User deleted');
     }
 }

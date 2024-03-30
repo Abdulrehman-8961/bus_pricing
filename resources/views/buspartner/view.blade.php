@@ -1,22 +1,21 @@
 @extends('layouts.dashboard')
 
 @section('content')
-@php
-    $l_no = DB::table('bus_partner')
-    ->latest('created_at')
-    ->first();
-    if (isset($l_no)) {
-        $last_no = $l_no->lieferanten;
-        $new_no = $last_no + 1;
-    } else {
-        $new_no = '1400';
-    }
-@endphp
+    @php
+        $l_no = DB::table('bus_partner')->latest('created_at')->first();
+        if (isset($l_no)) {
+            $last_no = $l_no->lieferanten;
+            $new_no = $last_no + 1;
+        } else {
+            $new_no = '1400';
+        }
+    @endphp
     <div class="container-fluid mw-100">
         <form class="container-fluid" method="GET" action="{{ url()->current() }}">
             <div class="row">
                 <div class="d-flex col-lg-8 col-md-8 col-12 mb-3 py-3 px-2">
-                    <button type="button" class="btn btn-success me-3" id="btn-add" style="white-space: nowrap;"><i class="fa fa-plus"></i> Neuer Partner</button>
+                    <button type="button" class="btn btn-success me-3" id="btn-add" style="white-space: nowrap;"><i
+                            class="fa fa-plus"></i> Neuer Partner</button>
                     <div class="d-flex align-items-center bg-white px-3 me-3">
                         <i class="ti ti-chevron-right fs-6 me-3"></i>
                         <select name="" id="" style="border: none;" class="form-control">
@@ -25,38 +24,16 @@
                     </div>
                     <div class="d-flex align-items-center bg-white px-3">
                         <i class="ti ti-search fs-8 me-3"></i>
-                        <input type="text" class="form-control me-1" style="border: none;" placeholder="Suchen" name="search" value="{{ @$_GET['search'] }}">
+                        <input type="text" class="form-control me-1" style="border: none;" placeholder="Suchen"
+                            name="search" value="{{ @$_GET['search'] }}">
                     </div>
-                    {{-- <button type="submit" class="btn btn-submit">Search</button> --}}
                 </div>
             </div>
         </form>
 
 
         <div class="card w-100 position-relative overflow-hidden">
-            {{-- <div class="px-4 py-3 border-bottom d-flex justify-content-between">
-                <h5 class="card-title fw-semibold mb-0 lh-sm">Employees</h5>
-                <a href="{{ url('/Employee/add') }}"
-                    class="justify-content-center btn btn-sm btn-light-primary text-primary font-medium d-flex align-items-center">
-                    <i class="ti ti-plus fs-4 me-2"></i>
-                    Add Employee
-                </a>
-            </div> --}}
             <div class="card-body">
-
-                {{-- <form class="container-fluid" method="GET" action="{{ url()->current() }}">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6 col-12 mb-3">
-                            <input type="text" class="form-control" name="search" value="{{ @$_GET['search'] }}">
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <button type="submit" class="btn btn-primary rounded-2">Search</button>
-                            <button type="button" onclick="window.location.href='{{ url()->current() }}'"
-                                class="btn btn-warning  rounded-2 ms-2">Clear</button>
-                        </div>
-                    </div>
-                </form> --}}
-
 
                 <div class="table-responsive rounded-2 mb-4" style="min-height: 200px;">
                     <table class="table text-nowrap customize-table mb-0 align-middle">
@@ -164,8 +141,7 @@
                             <div class="mb-3">
                                 <label for="adresse" class="form-label">Adresse</label>
                                 <input type="text" class="form-control @error('adresse') is-invalid @enderror"
-                                    value="{{ old('adresse') }}" name="adresse" id="adresse"
-                                    aria-describedby="adresse">
+                                    value="{{ old('adresse') }}" name="adresse" id="adresse" aria-describedby="adresse">
                                 @error('adresse')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
@@ -175,24 +151,25 @@
                             <div class="mb-3">
                                 <label for="stadt" class="form-label">Stadt</label>
                                 <input type="text" class="form-control @error('stadt') is-invalid @enderror"
-                                    value="{{ old('stadt') }}" name="stadt" id="stadt"
-                                    aria-describedby="stadt">
+                                    value="{{ old('stadt') }}" name="stadt" id="stadt" aria-describedby="stadt">
                                 @error('stadt')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
                         @php
-                            $bundesland = DB::table('bundeslander')->where('is_deleted',0)->get();
-                            $bustype = DB::table('bus_type')->where('is_deleted',0)->get();
+                            $bundesland = DB::table('bundeslander')->where('is_deleted', 0)->get();
+                            $bustype = DB::table('bus_type')->where('is_deleted', 0)->get();
                         @endphp
                         <div class="col-lg-3 col-12">
                             <div class="mb-4">
                                 <label for="bundesland" class="form-label">Bundesland</label>
                                 <select class="form-control" name="bundesland" id="bundesland">
                                     <option value="">Select Bundesland</option>
-                                    @foreach($bundesland as $row)
-                                    <option value="{{ $row->id }}" {{ old('bundesland') == $row->id ? 'selected' : '' }}>{{ $row->bundsland }}</option>
+                                    @foreach ($bundesland as $row)
+                                        <option value="{{ $row->id }}"
+                                            {{ old('bundesland') == $row->id ? 'selected' : '' }}>{{ $row->bundsland }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 @error('bundesland')
@@ -215,8 +192,10 @@
                                 <label for="bustype" class="form-label">Bustypen</label>
                                 <select class="form-control" name="bustype" id="bustype">
                                     <option value="">Select Bus</option>
-                                    @foreach($bustype as $row)
-                                    <option value="{{ $row->id }}" {{ old('bustype') == $row->id ? 'selected' : '' }}>{{ $row->name }}</option>
+                                    @foreach ($bustype as $row)
+                                        <option value="{{ $row->id }}"
+                                            {{ old('bustype') == $row->id ? 'selected' : '' }}>{{ $row->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 @error('bustype')
