@@ -11,6 +11,7 @@ use App\Http\Controllers\LeadsController;
 use App\Http\Controllers\StammdatenController;
 use App\Http\Controllers\BusPartnerController;
 use App\Http\Controllers\AbwicklungController;
+use App\Http\Controllers\CoronController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +81,7 @@ Route::post('/Link/save', [App\Http\Controllers\HomeController::class, 'settingS
 
 
 Route::get('/Leads', [LeadsController::class, 'view'])->middleware('isAdminDispatcher');
+Route::get('/Coron-Leads', [CoronController::class, 'getLeads']);
 // Route::get('/Employee/add', [UserController::class, 'add'])->middleware('isAdmin');
 // Route::post('/Employee/save', [UserController::class, 'save'])->middleware('isAdmin');
 // Route::get('/Employee/edit/{id}', [UserController::class, 'edit'])->middleware('isAdmin');

@@ -19,33 +19,17 @@ class LeadsController extends Controller
 
     public function view(Request $request)
     {
+        $search = @$request->input('search');
         $title = $this->title;
-        // $lead = DB::table('db7_forms')->where('form_id',2085)->first();
-        // var_dump($lead->form_value);
-        // exit;
-        // $leadData = unserialize($lead->form_value);
-        // $leadData = [
-        //     'firstName' => 'Sara',
-        //     'lastName' => 'Blum-Kantarowska'
-        // ];
+        $leads = DB::table('leads')->where('is_deleted', 0)
+            ->where(function ($query) use ($search) {
+                if (!empty($search)) {
+                    $query->where('vnr', 'LIKE', '%' . $search . '%')
+                        ->orWhere('customer_number', 'LIKE', '%' . $search . '%');
+                }
+            })
+            ->paginate(20);
 
-        // $lexofficeApiUrl = 'https://api.lexoffice.io/v1/contacts';
-
-        // $response = Http::withHeaders([
-        //     'Authorization' => 'Bearer iwnyrX7KxxpmvHDMaJcy60_I7z0TD3J9D2S6jOvxrFbBcQ4E',
-        //     'Content-Type' => 'application/json',
-        // ])->post($lexofficeApiUrl, $leadData);
-        // dd($response);
-
-        // if ($response->successful()) {
-        //     $lexofficeCustomerId = $response->json()['id'];
-        //     // Store $lexofficeCustomerId in your local database for future reference
-        //     // You can also redirect or return a success response
-        // } else {
-        //     // Handle error (e.g., log or notify admin)
-        //     // You can redirect or return an error response
-        // }
-
-        return view("leads.view", compact("title"));
+        return view("leads.view", compact("title", "leads"));
     }
 }

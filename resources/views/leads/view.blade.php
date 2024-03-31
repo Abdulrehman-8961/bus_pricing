@@ -120,17 +120,20 @@
         <form class="container-fluid" method="GET" action="{{ url()->current() }}">
             <div class="row">
                 <div class="d-flex col-lg-6 col-md-6 col-12 mb-3 py-3 px-2">
-                    <button type="button" class="btn btn-success me-3" style="white-space: nowrap;"><i class="fa fa-plus"></i> lead</button>
+                    <button type="button" class="btn btn-success me-3" style="white-space: nowrap;"><i
+                            class="fa fa-plus"></i> lead</button>
                     <div class="d-flex align-items-center bg-white px-3">
                         <i class="ti ti-search fs-8 me-3"></i>
-                        <input type="text" class="form-control me-1" style="border: none;" placeholder="Suchen" name="search" value="{{ @$_GET['search'] }}">
+                        <input type="text" class="form-control me-1" style="border: none;" placeholder="Suchen"
+                            name="search" value="{{ @$_GET['search'] }}">
                     </div>
                     {{-- <button type="submit" class="btn btn-submit">Search</button> --}}
                 </div>
                 <div class="d-flex col-lg-4 col-md-4 col-12">
                 </div>
                 <div class="col-lg-2 col-md-2 col-12 text-end">
-                    <button type="button" class="btn btn bg-white mt-3" style="white-space: nowrap;"><i class="fa fa-plus me-2"></i> label</button>
+                    <button type="button" class="btn btn bg-white mt-3" style="white-space: nowrap;"><i
+                            class="fa fa-plus me-2"></i> label</button>
                 </div>
             </div>
         </form>
@@ -195,16 +198,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($users as $user) --}}
+                            @foreach ($leads as $row)
                                 <tr>
                                     <td>
-                                        <p class="mb-0 fw-normal"></p>
+                                        <p class="mb-0 fw-normal">{{ $row->vnr }}</p>
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="">
-                                                <h6 class="fs-4 fw-normal mb-0">
-                                                    </h6>
+                                                <h6 class="fs-4 fw-normal mb-0">{{ $row->firstname }}
+                                                    {{ $row->lastname }}
+                                                </h6>
                                             </div>
                                         </div>
                                     </td>
@@ -212,24 +216,26 @@
                                         <div class="d-flex align-items-center">
                                             <div class="">
                                                 <h6 class="fs-4 fw-normal mb-0">
-                                                    </h6>
+                                                </h6>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge fw-semibold py-1 w-85 bg-light-primary text-primary">Private</span>
+                                        <span
+                                            class="badge fw-semibold py-1 w-85 bg-light-primary text-primary">Private</span>
                                     </td>
                                     <td>
                                         <p class="mb-0 fw-normal"></p>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal"></p>
+                                        <p class="mb-0 fw-normal">{{ date('d. M. Y, H:i', strtotime($row->created_at)) }}
+                                        </p>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal"></p>
+                                        <p class="mb-0 fw-normal">Volkan</p>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal"></p>
+                                        <p class="mb-0 fw-normal">{{ $row->customer_number }}</p>
                                     </td>
                                     <td>
                                         <div class="dropdown dropstart">
@@ -241,24 +247,22 @@
                                                 @if (Auth::user()->role == 'Admin')
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                                            href="#"><i
-                                                                class="fs-4 ti ti-edit"></i>Edit</a>
+                                                            href="#"><i class="fs-4 ti ti-edit"></i>Edit</a>
                                                     </li>
                                                 @endif
                                                 <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-3 delete"
-                                                        href="#"><i
-                                                            class="fs-4 ti ti-trash"></i>Delete</a>
+                                                        href="#"><i class="fs-4 ti ti-trash"></i>Delete</a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </td>
                                 </tr>
-                            {{-- @endforeach --}}
+                            @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
-                                {{-- <td colspan="7">{{ $users->links('pagination::bootstrap-5') }}</td> --}}
+                                <td colspan="9">{{ $leads->links('pagination::bootstrap-5') }}</td>
                             </tr>
                         </tfoot>
                     </table>
