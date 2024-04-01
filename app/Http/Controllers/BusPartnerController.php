@@ -52,6 +52,7 @@ class BusPartnerController extends Controller
             ->leftJoin('bus_type as bt', function ($join) {
                 $join->on('bt.id', '=', 'l.bustype')->where('bt.is_deleted', 0);
             })
+            ->where('l.in_deal',1)
             ->select('l.*', 'bt.name as bus_name', 'bd.bundsland as bundsland_name')
             ->paginate(20);
 
