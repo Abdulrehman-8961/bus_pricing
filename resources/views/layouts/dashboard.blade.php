@@ -242,6 +242,14 @@
                             </a>
                         </li>
                         <li class="sidebar-item has-arrow">
+                            <a class="sidebar-link" href="{{ url('/Deals') }}" aria-expanded="false">
+                                <span class="d-flex">
+                                    {{-- <i class="ti ti-users"></i> --}}
+                                </span>
+                                <span class="hide-menu">Deals</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item has-arrow">
                             <a class="sidebar-link" href="{{ url('/Bus-Partner') }}" aria-expanded="false">
                                 <span class="d-flex">
                                     {{-- <i class="ti ti-users"></i> --}}

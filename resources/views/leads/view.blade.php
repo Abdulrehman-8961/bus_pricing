@@ -221,8 +221,16 @@
                                         </div>
                                     </td>
                                     <td>
+                                        @if ($row->grund == 'Privat')
+                                            <span
+                                                class="badge fw-semibold py-1 w-85 bg-primary text-white">Private</span>
+                                        @elseif($row->grund == 'Verein')
                                         <span
-                                            class="badge fw-semibold py-1 w-85 bg-light-primary text-primary">Private</span>
+                                                class="badge fw-semibold py-1 w-85 bg-warning">Association</span>
+                                                @else
+                                                <span
+                                                class="badge fw-semibold py-1 w-85 bg-danger">Corporate</span>
+                                        @endif
                                     </td>
                                     <td>
                                         <p class="mb-0 fw-normal"></p>
@@ -247,12 +255,14 @@
                                                 @if (Auth::user()->role == 'Admin')
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                                            href="#"><i class="fs-4 ti ti-edit"></i>Edit</a>
+                                                            href="{{ url('/Leads/edit') }}/{{ $row->id }}"><i
+                                                                class="fs-4 ti ti-edit"></i>Bearbeiten</a>
                                                     </li>
                                                 @endif
                                                 <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-3 delete"
-                                                        href="#"><i class="fs-4 ti ti-trash"></i>Delete</a>
+                                                        href="#"><i class="fs-4 ti ti-trash"></i>In Deal
+                                                        umwandeln</a>
                                                 </li>
                                             </ul>
                                         </div>

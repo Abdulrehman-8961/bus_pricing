@@ -12,6 +12,7 @@ use App\Http\Controllers\StammdatenController;
 use App\Http\Controllers\BusPartnerController;
 use App\Http\Controllers\AbwicklungController;
 use App\Http\Controllers\CoronController;
+use App\Http\Controllers\DealController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,10 +83,9 @@ Route::post('/Link/save', [App\Http\Controllers\HomeController::class, 'settingS
 
 Route::get('/Leads', [LeadsController::class, 'view'])->middleware('isAdminDispatcher');
 Route::get('/Coron-Leads', [CoronController::class, 'getLeads']);
-// Route::get('/Employee/add', [UserController::class, 'add'])->middleware('isAdmin');
 // Route::post('/Employee/save', [UserController::class, 'save'])->middleware('isAdmin');
-// Route::get('/Employee/edit/{id}', [UserController::class, 'edit'])->middleware('isAdmin');
-// Route::post('/Employee/update/{id}', [UserController::class, 'update'])->middleware('isAdmin');
+Route::get('/Leads/edit/{id}', [LeadsController::class, 'edit'])->middleware('isAdmin');
+Route::post('/Leads/update/{id}', [LeadsController::class, 'updateLead'])->middleware('isAdmin');
 // Route::post('/Employee/update-password/{id}', [UserController::class, 'update_password'])->middleware('isAdmin');
 // Route::get('/Employee/delete/{id}', [UserController::class, 'delete'])->middleware('isAdmin');
 
@@ -105,4 +105,7 @@ Route::get('/Bus-Partner/edit/{id}', [BusPartnerController::class, 'edit'])->mid
 Route::post('/Bus-Partner/update/{id}', [BusPartnerController::class, 'update'])->middleware('isAdmin');
 Route::get('/Bus-Partner/delete/{id}', [BusPartnerController::class, 'delete'])->middleware('isAdmin');
 
-Route::get('/Abwicklung',[AbwicklungController::class, 'view'])->middleware('isAdminDispatcher');
+Route::get('/Abwicklung', [AbwicklungController::class, 'view'])->middleware('isAdminDispatcher');
+
+
+Route::get('/Deals', [DealController::class, 'view'])->middleware('isAdminDispatcher');

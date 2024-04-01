@@ -32,4 +32,41 @@ class LeadsController extends Controller
 
         return view("leads.view", compact("title", "leads"));
     }
+
+    public function edit(Request $request, $id){
+        $leads = DB::table('leads')->where('id',$id)->first();
+        return view('leads.Edit', compact("leads"));
+    }
+
+
+    public function updateLead(Request $request, $id){
+        $updateField = [];
+        if ($request->has('name')) {
+            $nameParts = explode(' ', $request->name);
+            $updateField['firstname'] = $nameParts[0];
+            $updateField['lastname'] = $nameParts[1];
+        }
+        if ($request->has('email')) {
+            $updateField['email'] = $request->input('email');
+        }
+        if ($request->has('phone')) {
+            $updateField['phone'] = $request->input('phone');
+        }
+        if ($request->has('hinfahrt')) {
+            $updateField['hinfahrt'] = $request->input('hinfahrt');
+        }
+        if ($request->has('rueckfahrtt')) {
+            $updateField['rueckfahrtt'] = $request->input('rueckfahrtt');
+        }
+        if ($request->has('pax')) {
+            $updateField['pax'] = $request->input('pax');
+        }
+        $update = DB::table('leads')->where('id', $id)->update($updateField);
+        if ($update) {
+            $lead = DB::table('leads')->where('id', $id)->first();
+        }
+        return redirect()->back()->with('success','Lead updated');
+    }
+
+
 }
