@@ -20,7 +20,8 @@ class AbwicklungController extends Controller
     {
         $title = $this->title;
         $search = @$request->get('search');
+        $leads = DB::table('leads')->where('phase','Abwicklung')->paginate(20);
 
-        return view("abwicklung.view", compact("title"));
+        return view("abwicklung.view", compact("title","leads"));
     }
 }

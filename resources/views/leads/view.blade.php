@@ -222,11 +222,11 @@
                                     </td>
                                     <td>
                                         @if ($row->grund == 'Privat')
-                                            <span class="badge fw-semibold py-1 w-85 bg-primary text-white">Private</span>
+                                            <span class="badge fw-semibold py-1 w-85 bg-primary text-white">Privat</span>
                                         @elseif($row->grund == 'Verein')
-                                            <span class="badge fw-semibold py-1 w-85 bg-warning">Association</span>
+                                            <span class="badge fw-semibold py-1 w-85 bg-warning">Verein</span>
                                         @else
-                                            <span class="badge fw-semibold py-1 w-85 bg-danger">Corporate</span>
+                                            <span class="badge fw-semibold py-1 w-85 bg-danger">Schule</span>
                                         @endif
                                     </td>
                                     <td>
@@ -252,13 +252,16 @@
                                                 @if (Auth::user()->role == 'Admin')
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                                            href="{{ url('/Leads/edit') }}/{{ $row->id }}"><i
-                                                                class="fs-4 ti ti-edit"></i>Bearbeiten</a>
+                                                            href="{{ url('/Leads/edit') }}/{{ $row->id }}">Bearbeiten</a>
                                                     </li>
                                                 @endif
                                                 <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-3 delete"
-                                                        href="#"><i class="fs-4 ti ti-trash"></i>In Deal
+                                                        href="{{ url('/Leads/delete') }}/{{ $row->id }}">Löschen</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-3 delete"
+                                                        href="{{ url('/Transfer-To-Deal') }}/{{ $row->id }}">In Deal
                                                         umwandeln</a>
                                                 </li>
                                             </ul>

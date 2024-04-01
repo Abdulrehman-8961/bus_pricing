@@ -61,11 +61,30 @@ class LeadsController extends Controller
         if ($request->has('pax')) {
             $updateField['pax'] = $request->input('pax');
         }
+        if ($request->has('hinfahrt_other_stops')) {
+            $updateField['hinfahrt_other_stops'] = $request->input('hinfahrt_other_stops');
+        }
+        if ($request->has('rueckfahrtt_other_stops')) {
+            $updateField['rueckfahrtt_other_stops'] = $request->input('rueckfahrtt_other_stops');
+        }
         $update = DB::table('leads')->where('id', $id)->update($updateField);
         if ($update) {
             $lead = DB::table('leads')->where('id', $id)->first();
         }
         return redirect()->back()->with('success','Lead updated');
+    }
+
+    public function transferToDeal($id){
+        DB::table('leads')->where('id',$id)->update([
+            'in_deal' => 1
+        ]);
+        return redirect()->back()->with('success','Transfered to deal');
+    }
+    public function delete($id){
+        DB::table('leads')->where('id',$id)->update([
+            'is_deleted' => 1
+        ]);
+        return redirect()->back()->with('success','Lead deleted');
     }
 
 

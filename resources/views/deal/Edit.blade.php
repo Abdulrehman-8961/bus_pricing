@@ -2,114 +2,148 @@
 
 @section('content')
     <div class="container-fluid mw-100">
-
-
-
-
-
         <div class="card w-100 position-relative overflow-hidden">
-            {{-- <div class="px-4 py-3 border-bottom d-flex justify-content-between">
-                <h5 class="card-title fw-semibold mb-0 lh-sm">Edit Employee</h5>
-
-            </div> --}}
             <div class="card-body p-4">
-                <form method="POST" class="container-fluid" action="{{ url('/Employee/update/' . $user->id) }}">
-                    @csrf
-                    <div class="row">
-                        <div class="col-lg-3 col-12">
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">First Name</label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    value="{{ $user->name }}" name="name" id="exampleInputEmail1"
-                                    aria-describedby="emailHelp">
-                                @error('name')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
+                <h4 class="mb-4"><span class="fw-bolder">VNR</span>: {{ $leads->vnr }}</h4>
+                <div class="row">
+                    <div class="col-md-2">
+                        <h5 class="mb-3">DETAILS</h5>
+                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex">
+                                <i class="ti ti-tag me-3"></i>
+                                <p class="bg-dark text-white">FIRMENKUNDE</p>
                             </div>
+                            <i class="ti ti-pencil"></i>
                         </div>
-                        <div class="col-lg-3 col-12">
-                            <div class="mb-3">
-                                <label for="last_name" class="form-label">Last Name</label>
-                                <input type="text" class="form-control @error('last_name') is-invalid @enderror"
-                                    value="{{ $user->last_name }}" name="last_name" id="last_name"
-                                    aria-describedby="emailHelp">
-                                @error('last_name')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
+                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex">
+                                <i class="ti ti-user-circle me-3"></i>
+                                <p>Volkan</p>
                             </div>
+                            <i class="ti ti-pencil"></i>
                         </div>
-                        <div class="col-lg-3 col-12">
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Email</label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                    value="{{ $user->email }}" name="email" id="exampleInputEmail1"
-                                    aria-describedby="emailHelp">
-                                @error('email')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
+                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex">
+                                <i class="ti ti-user-circle me-3"></i>
+                                <p>Manuell erstellt</p>
                             </div>
-                        </div>
-                        <div class="col-lg-3 col-12">
-                            <div class="mb-4">
-                                <label for="role" class="form-label">Role</label>
-                                <select class="form-control" name="role" id="role">
-                                    <option value="">Select Value</option>
-                                    <option value="Admin" {{ $user->role == "Admin" ? 'selected' : '' }}>Admin</option>
-                                    <option value="Dispatcher" {{ $user->role == "Dispatcher" ? 'selected' : '' }}>Dispatcher</option>
-                                    <option value="Employee" {{ $user->role == "Employee" ? 'selected' : '' }}>Employee</option>
-                                </select>
-                                @error('phone_number')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-12 mb-4">
-                            <button type="submit" class="btn btn-success me-2">speichern</button>
-                            <button type="button" onclick="window.location.reload();"
-                                class="btn btn-submit">Löschen</button>
+                            <i class="ti ti-pencil"></i>
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
-        <div class="card w-100 position-relative overflow-hidden">
-            {{-- <div class="px-4 py-3 border-bottom d-flex justify-content-between">
-                <h5 class="card-title fw-semibold mb-0 lh-sm">Edit Password</h5>
-
-            </div> --}}
-            <div class="card-body p-4">
-                <form method="POST" class="container-fluid" action="{{ url('/Employee/update-password/' . $user->id) }}">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-4 col-lg-3 col-12 ">
-                            <div class="mb-4">
-                                <label for="exampleInputPassword1" class="form-label">Password</label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                    name="password" id="exampleInputPassword1">
-                                @error('password')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
+                    <div class="col-md-2">
+                        <h5 class="mb-3">KONTACT</h5>
+                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex">
+                                <i class="ti ti-user-circle me-3"></i>
+                                <p class="fw-bolder" style="cursor: pointer;"
+                                    onclick="edit('{{ $leads->firstname }} {{ $leads->lastname }}','name')">
+                                    {{ $leads->firstname }} {{ $leads->lastname }}</p>
                             </div>
+                            <i class="ti ti-pencil"></i>
                         </div>
-                        <div class="col-md-4 col-lg-3 col-12 ">
-                            <div class="mb-4">
-                                <label for="exampleInputPassword2" class="form-label">Password Confirmation</label>
-                                <input type="password"
-                                    class="form-control @error('confirm_password') is-invalid @enderror"
-                                    name="confirm_password" id="exampleInputPassword2">
-                                @error('confirm_password')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
+                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex">
+                                <i class="ti ti-mail me-3"></i>
+                                <p style="cursor: pointer;" onclick="edit('{{ $leads->email }}','email')">
+                                    {{ $leads->email }}</p>
                             </div>
+                            <i class="ti ti-pencil"></i>
                         </div>
-                        <div class="col-md-12 mb-4">
-                            <button type="submit" class="btn btn-success me-2">speichern</button>
-                            <button type="button" onclick="window.location.reload();"
-                                class="btn btn-submit">Löschen</button>
+                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex">
+                                <i class="ti ti-phone me-3"></i>
+                                <p style="cursor: pointer;" onclick="edit('{{ $leads->phone }}','phone')">
+                                    {{ $leads->phone }}</p>
+                            </div>
+                            <i class="ti ti-pencil"></i>
                         </div>
                     </div>
-                </form>
+                    <div class="col-md-2">
+                        <h5 class="mb-3">UNTERNEHMEN</h5>
+                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex">
+                                <i class="ti ti-building me-3"></i>
+                                <p class=""> </p>
+                            </div>
+                        </div>
+                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex">
+                                <p>Address:</p>
+                                <p>{{ $leads->start }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <h5 class="mb-5">FAHRTDETAILS <span><i class="ti ti-pencil ms-2"></i></span></h5>
+                            <p class="mb-3"><u>Hin und Rückfahrt</u><span><i class="ti ti-pencil ms-2"></i></span></p>
+                            <p class="mb-0">Hinfahrt <span style="cursor: pointer;"
+                                    onclick="edit('{{ $leads->hinfahrt }}','hinfahrt')">{{ $leads->hinfahrt }}<i
+                                        class="ti ti-pencil ms-2 me-2"></i></span><span style="cursor: pointer;"
+                                    onclick="edit('{{ $leads->hinfahrt_other_stops }}','hinfahrt_other_stops')">{{ $leads->hinfahrt_other_stops }}
+                                    <i class="ti ti-pencil ms-2"></i></span>
+                            </p>
+                            <p class="mb-0">Rückfahrt
+                                <span style="cursor: pointer;"
+                                    onclick="edit('{{ $leads->rueckfahrtt }}','rueckfahrtt')">{{ $leads->rueckfahrtt }}<i
+                                        class="ti ti-pencil ms-2"></i></span><span style="cursor: pointer;"
+                                    onclick="edit('{{ $leads->rueckfahrtt_other_stops }}','rueckfahrtt_other_stops')">
+                                    {{ $leads->rueckfahrtt_other_stops }}
+                                    <i class="ti ti-pencil ms-2"></i></span>
+                            </p>
+                            <p class="mb-0" style="cursor: pointer;" onclick="edit('{{ $leads->pax }}','pax')">PAX.
+                                {{ $leads->pax }}<span><i class="ti ti-pencil ms-2 me-2"></i></span></p>
+                        </div>
+                        <div class="mb-3">
+                            <p class="mb-3"><u>Nachricht vom Kunden</u></p>
+                            <p class="mb-0">{{ $leads->bemerkung }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <p class="mb-3"><u>Notizer</u><span><i class="ti ti-pencil ms-2"></i></span></p>
+                            <p class="mb-0">{{ $leads->bemerkung }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <div class="modal fade" id="editmodal" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action="{{ url('Leads/update') }}/{{ $leads->id }}" method="post">
+                    @csrf
+                    <div class="modal-header d-flex align-items-center">
+                        <h4 class="modal-title" id="myModalLabel">
+                            Kontact
+                        </h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="editField" class="form-control">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-bs-dismiss="modal">
+                            Abbrechen
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            Speichern
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+@endsection
+
+@section('javascript')
+    <script>
+        function edit(value, fieldName) {
+            $('#editField').val(value);
+            $('#editField').attr("name", fieldName);
+            $('#editmodal').modal('show');
+        }
+    </script>
 @endsection

@@ -36,7 +36,8 @@
                             <div class="d-flex">
                                 <i class="ti ti-user-circle me-3"></i>
                                 <p class="fw-bolder" style="cursor: pointer;"
-                                    onclick="edit('{{ $leads->firstname }} {{ $leads->lastname }}','name')">{{ $leads->firstname }} {{ $leads->lastname }}</p>
+                                    onclick="edit('{{ $leads->firstname }} {{ $leads->lastname }}','name')">
+                                    {{ $leads->firstname }} {{ $leads->lastname }}</p>
                             </div>
                             <i class="ti ti-pencil"></i>
                         </div>
@@ -76,14 +77,22 @@
                         <div class="mb-3">
                             <h5 class="mb-5">FAHRTDETAILS <span><i class="ti ti-pencil ms-2"></i></span></h5>
                             <p class="mb-3"><u>Hin und Rückfahrt</u><span><i class="ti ti-pencil ms-2"></i></span></p>
-                            <p class="mb-0" style="cursor: pointer;" onclick="edit('{{ $leads->hinfahrt }}','hinfahrt')">
-                                Hinfahrt {{ $leads->hinfahrt }}<span><i class="ti ti-pencil ms-2"></i></span>
+                            <p class="mb-0">Hinfahrt <span style="cursor: pointer;"
+                                    onclick="edit('{{ $leads->hinfahrt }}','hinfahrt')">{{ $leads->hinfahrt }}<i
+                                        class="ti ti-pencil ms-2 me-2"></i></span><span style="cursor: pointer;"
+                                    onclick="edit('{{ $leads->hinfahrt_other_stops }}','hinfahrt_other_stops')">{{ $leads->hinfahrt_other_stops }}
+                                    <i class="ti ti-pencil ms-2"></i></span>
                             </p>
-                            <p class="mb-0" style="cursor: pointer;"
-                                onclick="edit('{{ $leads->rueckfahrtt }}','rueckfahrtt')">Rückfahrt
-                                {{ $leads->rueckfahrtt }}<span><i class="ti ti-pencil ms-2"></i></span></p>
-                            <p class="mb-0" style="cursor: pointer;"
-                            onclick="edit('{{ $leads->pax }}','pax')">PAX. {{ $leads->pax }}<span><i class="ti ti-pencil ms-2"></i></span></p>
+                            <p class="mb-0">Rückfahrt
+                                <span style="cursor: pointer;"
+                                    onclick="edit('{{ $leads->rueckfahrtt }}','rueckfahrtt')">{{ $leads->rueckfahrtt }}<i
+                                        class="ti ti-pencil ms-2"></i></span><span style="cursor: pointer;"
+                                    onclick="edit('{{ $leads->rueckfahrtt_other_stops }}','rueckfahrtt_other_stops')">
+                                    {{ $leads->rueckfahrtt_other_stops }}
+                                    <i class="ti ti-pencil ms-2"></i></span>
+                            </p>
+                            <p class="mb-0" style="cursor: pointer;" onclick="edit('{{ $leads->pax }}','pax')">PAX.
+                                {{ $leads->pax }}<span><i class="ti ti-pencil ms-2 me-2"></i></span></p>
                         </div>
                         <div class="mb-3">
                             <p class="mb-3"><u>Nachricht vom Kunden</u></p>
@@ -132,12 +141,9 @@
 @section('javascript')
     <script>
         function edit(value, fieldName) {
-            console.log(value, fieldName);
-            if (value && fieldName) {
-                $('#editField').val(value);
-                $('#editField').attr("name", fieldName);
-                $('#editmodal').modal('show');
-            }
+            $('#editField').val(value);
+            $('#editField').attr("name", fieldName);
+            $('#editmodal').modal('show');
         }
     </script>
 @endsection

@@ -151,7 +151,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($users as $user) --}}
+                            @foreach ($leads as $row)
                                 <tr>
                                     <td>
                                         <p class="mb-0 fw-normal"></p>
@@ -159,7 +159,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="">
-                                                <h6 class="fs-4 fw-normal mb-0">
+                                                <h6 class="fs-4 fw-normal mb-0">{{ $row->customer_number }}
                                                     </h6>
                                             </div>
                                         </div>
@@ -176,7 +176,10 @@
                                         <p class="mb-0 fw-normal"></p>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal"></p>
+                                        <p class="mb-0 fw-normal">{{ $row->vnr }}</p>
+                                    </td>
+                                    <td>
+                                        <p class="mb-0 fw-normal">{{ $row->firmaoptional }}</p>
                                     </td>
                                     <td>
                                         <p class="mb-0 fw-normal"></p>
@@ -187,10 +190,7 @@
                                     <td>
                                         <p class="mb-0 fw-normal"></p>
                                     </td>
-                                    <td>
-                                        <p class="mb-0 fw-normal"></p>
-                                    </td>
-                                    
+
                                     <td>
                                         <p class="mb-0 fw-normal"></p>
                                     </td>
@@ -217,11 +217,11 @@
                                         </div>
                                     </td>
                                 </tr>
-                            {{-- @endforeach --}}
+                            @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
-                                {{-- <td colspan="7">{{ $users->links('pagination::bootstrap-5') }}</td> --}}
+                                <td colspan="11">{{ $leads->links('pagination::bootstrap-5') }}</td>
                             </tr>
                         </tfoot>
                     </table>

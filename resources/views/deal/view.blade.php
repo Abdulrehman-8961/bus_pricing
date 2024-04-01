@@ -271,81 +271,119 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($users as $user) --}}
-                            <tr>
-                                <td>
-                                    <p class="mb-0 fw-normal"></p>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="">
-                                            <h6 class="fs-4 fw-normal mb-0">
-                                            </h6>
+                            @foreach ($leads as $row)
+                                <tr>
+                                    <td>
+                                        <p class="mb-0 fw-normal"></p>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="">
+                                                <h6 class="fs-4 fw-normal mb-0">{{ $row->customer_number }}
+                                                </h6>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="">
-                                            <h6 class="fs-4 fw-normal mb-0">
-                                            </h6>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="">
+                                                <h6 class="fs-4 fw-normal mb-0">{{ $row->vnr }}
+                                                </h6>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="mb-0 fw-normal"></p>
-                                </td>
-                                <td>
-                                    <p class="mb-0 fw-normal"></p>
-                                </td>
-                                <td>
-                                    <p class="mb-0 fw-normal"></p>
-                                </td>
-                                <td>
-                                    <p class="mb-0 fw-normal"></p>
-                                </td>
-                                <td>
-                                    <p class="mb-0 fw-normal"></p>
-                                </td>
-                                <td>
-                                    <div class="container">
-                                        <!-- Responsive Arrow Progress Bar -->
-                                        <div class="arrow-steps clearfix">
-                                            <div class="step done"> <span> <a href="#">&nbsp;</a></span> </div>
-                                            <div class="step current"> <span><a href="#">&nbsp;</a></span> </div>
-                                            <div class="step"> <span><a href="#">&nbsp;</a><span> </div>
-                                            <div class="step"> <span><a href="#">&nbsp;</a><span> </div>
-                                            <div class="step"> <span><a href="#">&nbsp;</a><span> </div>
-                                            <div class="step"> <span><a href="#">&nbsp;</a><span> </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="dropdown dropstart">
-                                        <a href="#" class="text-muted" id="dropdownMenuButton"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="ti ti-dots-vertical fs-6"></i>
-                                        </a>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            @if (Auth::user()->role == 'Admin')
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-3"
-                                                        href="#"><i class="fs-4 ti ti-edit"></i>Edit</a>
-                                                </li>
+                                    </td>
+                                    <td>
+                                        <p class="mb-0 fw-normal"></p>
+                                    </td>
+                                    <td>
+                                        <p class="mb-0 fw-normal"></p>
+                                    </td>
+                                    <td>
+                                        <p class="mb-0 fw-normal">{{ $row->firstname }} {{ $row->lastname }}</p>
+                                    </td>
+                                    <td>
+                                        <p class="mb-0 fw-normal">
+                                            @if ($row->grund == 'Privat')
+                                                Privat
+                                            @elseif($row->grund == 'Verein')
+                                                Verein
+                                            @else
+                                                Schule
                                             @endif
-                                            <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-3 delete"
-                                                    href="#"><i class="fs-4 ti ti-trash"></i>Delete</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            {{-- @endforeach --}}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="mb-0 fw-normal"></p>
+                                    </td>
+                                    <td>
+                                        <div class="container">
+                                            <!-- Responsive Arrow Progress Bar -->
+                                            <div class="arrow-steps clearfix">
+                                                <div class="step {{ $row->phase == 'Details' ? 'current' : 'done' }}  me-1"
+                                                    style="cursor: pointer;"
+                                                    onclick="confirmPhaseUpdate('{{ url('Phase-Update') }}/{{ $row->id }}?phase=Details')">
+                                                    <span> <a href="#">&nbsp;</a></span>
+                                                </div>
+
+                                                <div class="step me-1 {{ $row->phase == 'Angebot' ? 'current' : (in_array($row->phase, ['Nachfassen', 'Buchung', 'Bussuche', 'Abwicklung']) ? 'done' : '') }}"
+                                                    style="cursor: pointer;"
+                                                    onclick="confirmPhaseUpdate('{{ url('Phase-Update') }}/{{ $row->id }}?phase=Angebot')">
+                                                    <span><a href="#">&nbsp;</a></span>
+                                                </div>
+
+                                                <div class="step me-1 {{ $row->phase == 'Nachfassen' ? 'current' : (in_array($row->phase, ['Buchung', 'Bussuche', 'Abwicklung']) ? 'done' : '') }}"
+                                                    style="cursor: pointer;"
+                                                    onclick="confirmPhaseUpdate('{{ url('Phase-Update') }}/{{ $row->id }}?phase=Nachfassen')">
+                                                    <span><a href="#">&nbsp;</a></span>
+                                                </div>
+
+                                                <div class="step me-1 {{ $row->phase == 'Buchung' ? 'current' : (in_array($row->phase, ['Bussuche', 'Abwicklung']) ? 'done' : '') }}"
+                                                    style="cursor: pointer;"
+                                                    onclick="confirmPhaseUpdate('{{ url('Phase-Update') }}/{{ $row->id }}?phase=Buchung')">
+                                                    <span><a href="#">&nbsp;</a></span>
+                                                </div>
+
+                                                <div class="step me-1 {{ $row->phase == 'Bussuche' ? 'current' : (in_array($row->phase, ['Abwicklung']) ? 'done' : '') }}"
+                                                    style="cursor: pointer;"
+                                                    onclick="confirmPhaseUpdate('{{ url('Phase-Update') }}/{{ $row->id }}?phase=Bussuche')">
+                                                    <span><a href="#">&nbsp;</a></span>
+                                                </div>
+
+                                                <div class="step me-1 {{ $row->phase == 'Abwicklung' ? 'current' : '' }}"
+                                                    style="cursor: pointer;"
+                                                    onclick="confirmPhaseUpdate('{{ url('Phase-Update') }}/{{ $row->id }}?phase=Abwicklung')">
+                                                    <span><a href="#">&nbsp;</a></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown dropstart">
+                                            <a href="#" class="text-muted" id="dropdownMenuButton"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="ti ti-dots-vertical fs-6"></i>
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                @if (Auth::user()->role == 'Admin')
+                                                    <li>
+                                                        <a class="dropdown-item d-flex align-items-center gap-3"
+                                                            href="{{ url('/Deals/edit') }}/{{ $row->id }}">Bearbeiten</a>
+                                                    </li>
+                                                @endif
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-3 delete"
+                                                        href="#"><i class="fs-4 ti ti-trash"></i>Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
-                                {{-- <td colspan="7">{{ $users->links('pagination::bootstrap-5') }}</td> --}}
+                                <td colspan="10">{{ $leads->links('pagination::bootstrap-5') }}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -363,5 +401,36 @@
                 $('.add-user-card').addClass('d-none');
             }
         })
+    </script>
+    <script>
+        function confirmPhaseUpdate(url) {
+            // Swal.fire({
+            //         title: "Are you sure?",
+            //         text: "Once updated, you cannot revert this action!",
+            //         icon: "warning",
+            //         buttons: ["Cancel", "Update"],
+            //         dangerMode: true,
+            //     })
+            //     .then((willUpdate) => {
+            //         if (willUpdate) {
+            //             window.location = url;
+            //         } else {
+            //             Swal.fire("Update cancelled!");
+            //         }
+            //     });
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes",
+            }).then((result) => {
+                if (result.value) {
+                    window.location = url;
+                }
+            });
+        }
     </script>
 @endsection

@@ -86,8 +86,8 @@ Route::get('/Coron-Leads', [CoronController::class, 'getLeads']);
 // Route::post('/Employee/save', [UserController::class, 'save'])->middleware('isAdmin');
 Route::get('/Leads/edit/{id}', [LeadsController::class, 'edit'])->middleware('isAdmin');
 Route::post('/Leads/update/{id}', [LeadsController::class, 'updateLead'])->middleware('isAdmin');
-// Route::post('/Employee/update-password/{id}', [UserController::class, 'update_password'])->middleware('isAdmin');
-// Route::get('/Employee/delete/{id}', [UserController::class, 'delete'])->middleware('isAdmin');
+Route::get('/Leads/delete/{id}', [LeadsController::class, 'delete'])->middleware('isAdmin');
+Route::get('/Transfer-To-Deal/{id}', [LeadsController::class, 'transferToDeal'])->middleware('isAdmin');
 
 
 Route::get('/Stammdaten', [StammdatenController::class, 'view'])->middleware('isAdminDispatcher');
@@ -109,3 +109,5 @@ Route::get('/Abwicklung', [AbwicklungController::class, 'view'])->middleware('is
 
 
 Route::get('/Deals', [DealController::class, 'view'])->middleware('isAdminDispatcher');
+Route::get('/Phase-Update/{id}', [DealController::class, 'phase_update'])->middleware('isAdminDispatcher');
+Route::get('/Deals/edit/{id}', [LeadsController::class, 'edit'])->middleware('isAdmin');
