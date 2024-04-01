@@ -222,14 +222,11 @@
                                     </td>
                                     <td>
                                         @if ($row->grund == 'Privat')
-                                            <span
-                                                class="badge fw-semibold py-1 w-85 bg-primary text-white">Private</span>
+                                            <span class="badge fw-semibold py-1 w-85 bg-primary text-white">Private</span>
                                         @elseif($row->grund == 'Verein')
-                                        <span
-                                                class="badge fw-semibold py-1 w-85 bg-warning">Association</span>
-                                                @else
-                                                <span
-                                                class="badge fw-semibold py-1 w-85 bg-danger">Corporate</span>
+                                            <span class="badge fw-semibold py-1 w-85 bg-warning">Association</span>
+                                        @else
+                                            <span class="badge fw-semibold py-1 w-85 bg-danger">Corporate</span>
                                         @endif
                                     </td>
                                     <td>
