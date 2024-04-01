@@ -20,7 +20,7 @@
                             <div class="mb-3">
                                 <label for="lieferanten" class="form-label">Lieferanten-Nr.</label>
                                 <input type="text" class="form-control @error('lieferanten') is-invalid @enderror"
-                                    value="{{ $data->lieferanten }}" name="lieferanten" id="lieferanten" readonly>
+                                    value="{{ $data->customer_number }}" name="lieferanten" id="lieferanten" readonly>
                                 @error('lieferanten')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
@@ -30,7 +30,7 @@
                             <div class="mb-3">
                                 <label for="firmnname" class="form-label">Firmnname</label>
                                 <input type="text" class="form-control @error('firmnname') is-invalid @enderror"
-                                    value="{{ $data->firmnname }}" name="firmnname" id="firmnname"
+                                    value="{{ $data->partner_firmnname }}" name="firmnname" id="firmnname"
                                     aria-describedby="emailHelp">
                                 @error('firmnname')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>

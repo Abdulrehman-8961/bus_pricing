@@ -372,8 +372,16 @@
                                                     </li>
                                                 @endif
                                                 <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-3"
+                                                        href="#">Angenommen</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-3"
+                                                        href="#">Abgelehnt</a>
+                                                </li>
+                                                <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-3 delete"
-                                                        href="#"><i class="fs-4 ti ti-trash"></i>Delete</a>
+                                                        href="{{ url('/Leads/delete') }}/{{ $row->id }}">Löschen</a>
                                                 </li>
                                             </ul>
                                         </div>

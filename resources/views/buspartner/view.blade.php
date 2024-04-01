@@ -60,13 +60,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $row)
+                            @foreach ($leads as $row)
                                 <tr>
                                     <td>
-                                        <h6 class="mb-0 fw-bolder">{{ $row->lieferanten }}</h6>
+                                        <h6 class="mb-0 fw-bolder">{{ $row->customer_number }}</h6>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal">{{ $row->firmnname }}</p>
+                                        <p class="mb-0 fw-normal">{{ $row->partner_firmnname }}</p>
                                     </td>
                                     <td>
                                         <p class="mb-0 fw-normal">{{ $row->stadt }}</p>
@@ -104,14 +104,14 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="6">{{ $data->links('pagination::bootstrap-5') }}</td>
+                                <td colspan="6">{{ $leads->links('pagination::bootstrap-5') }}</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
         </div>
-        <div class="card w-100 position-relative overflow-hidden add-user-card {{ $errors->any() ? '' : 'd-none' }}">
+        {{-- <div class="card w-100 position-relative overflow-hidden add-user-card {{ $errors->any() ? '' : 'd-none' }}">
             <div class="card-body p-4">
                 <form method="POST" class="container-fluid" action="{{ url('/Bus-Partner/save') }}">
                     @csrf
@@ -211,7 +211,7 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection
 @section('javascript')

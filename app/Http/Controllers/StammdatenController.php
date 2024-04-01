@@ -34,8 +34,9 @@ class StammdatenController extends Controller
         // $users->appends([
         //     "search" => $search,
         // ]);
+        $leads = DB::table('leads')->where('is_deleted',0)->paginate(20);
 
-        return view("stammdaten.view", compact("title"));
+        return view("stammdaten.view", compact("title","leads"));
     }
     public function add()
     {

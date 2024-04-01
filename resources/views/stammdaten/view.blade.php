@@ -190,15 +190,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($users as $user) --}}
+                            @foreach ($leads as $row)
                                 <tr>
                                     <td>
-                                        <p class="mb-0 fw-normal"></p>
+                                        <p class="mb-0 fw-normal">{{ $row->customer_number }}</p>
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="">
-                                                <h6 class="fs-4 fw-normal mb-0">
+                                                <h6 class="fs-4 fw-normal mb-0">{{ $row->firmaoptional }}
                                                     </h6>
                                             </div>
                                         </div>
@@ -206,19 +206,25 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="">
-                                                <h6 class="fs-4 fw-normal mb-0">
+                                                <h6 class="fs-4 fw-normal mb-0">{{ $row->firstname }} {{ $row->lastname }}
                                                     </h6>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal"></p>
+                                        <p class="mb-0 fw-normal">@if ($row->grund == 'Privat')
+                                            Privat
+                                        @elseif($row->grund == 'Verein')
+                                            Verein
+                                        @else
+                                            Schule
+                                        @endif</p>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal"></p>
+                                        <p class="mb-0 fw-normal">{{ $row->email }}</p>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal"></p>
+                                        <p class="mb-0 fw-normal">{{ date('d.m.Y',strtotime($row->created_at)) }}</p>
                                     </td>
                                     <td>
                                         <div class="dropdown dropstart">
@@ -230,24 +236,22 @@
                                                 @if (Auth::user()->role == 'Admin')
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                                            href="#"><i
-                                                                class="fs-4 ti ti-edit"></i>Edit</a>
+                                                            href="{{ url('/Leads/edit') }}/{{ $row->id }}">Bearbeiten</a>
                                                     </li>
                                                 @endif
                                                 <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-3 delete"
-                                                        href="#"><i
-                                                            class="fs-4 ti ti-trash"></i>Delete</a>
+                                                        href="{{ url('/Leads/delete') }}/{{ $row->id }}"></i>Löschen</a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </td>
                                 </tr>
-                            {{-- @endforeach --}}
+                            @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
-                                {{-- <td colspan="7">{{ $users->links('pagination::bootstrap-5') }}</td> --}}
+                                <td colspan="7">{{ $leads->links('pagination::bootstrap-5') }}</td>
                             </tr>
                         </tfoot>
                     </table>

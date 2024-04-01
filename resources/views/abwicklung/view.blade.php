@@ -188,7 +188,7 @@
                                         <p class="mb-0 fw-normal"></p>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal"></p>
+                                        <p class="mb-0 fw-normal">{{ $row->partner_firmnname }}</p>
                                     </td>
 
                                     <td>
