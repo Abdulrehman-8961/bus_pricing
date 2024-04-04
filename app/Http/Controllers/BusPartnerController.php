@@ -20,6 +20,7 @@ class BusPartnerController extends Controller
     {
         $title = $this->title;
         $search = @$request->get('search');
+        $category = @$request->get('category');
         // $data = DB::table('bus_partner as b')
         //     ->where('b.is_deleted', 0)
         //     ->leftJoin('bundeslander as bd', function ($join) {
@@ -52,7 +53,28 @@ class BusPartnerController extends Controller
             ->leftJoin('bus_type as bt', function ($join) {
                 $join->on('bt.id', '=', 'l.bustype')->where('bt.is_deleted', 0);
             })
-            ->where('l.in_deal',1)
+            ->where(function ($query) use ($category, $search) {
+                if (empty($category)) {
+                    $query->where('l.customer_number', 'LIKE', '%' . $search . '%')
+                        ->orWhere('l.firmaoptional', 'LIKE', '%' . $search . '%')
+                        ->orWhere('l.plz', 'LIKE', '%' . $search . '%')
+                        ->orWhere('bd.bundsland', 'LIKE', '%' . $search . '%')
+                        ->orWhere('l.email', 'LIKE', '%' . $search . '%');
+                } elseif (!empty($category)) {
+                    if ($category == "kunden_nr") {
+                        $query->where('l.customer_number', 'LIKE', '%' . $search . '%');
+                    } elseif ($category == "firmenname") {
+                        $query->where('l.firmaoptional', 'LIKE', '%' . $search . '%');
+                    } elseif ($category == "email") {
+                        $query->where('l.email', 'LIKE', '%' . $search . '%');
+                    } elseif ($category == "plz") {
+                        $query->where('l.plz', 'LIKE', '%' . $search . '%');
+                    } elseif ($category == "bundesland") {
+                        $query->where('bd.bundsland', 'LIKE', '%' . $search . '%');
+                    }
+                }
+            })
+            ->where('l.in_deal', 1)
             ->select('l.*', 'bt.name as bus_name', 'bd.bundsland as bundsland_name')
             ->paginate(20);
 

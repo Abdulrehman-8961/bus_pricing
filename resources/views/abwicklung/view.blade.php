@@ -93,8 +93,13 @@
                     <button type="button" class="btn btn-success me-3" style="white-space: nowrap;"><i class="fa fa-plus"></i> Neukunde</button>
                     <div class="d-flex align-items-center bg-white px-3 me-3">
                         <i class="ti ti-chevron-right fs-6 me-3"></i>
-                        <select name="" id="" style="border: none;" class="form-control">
+                        <select name="category" id="category" style="border: none;" class="form-control">
                             <option value="">Kategorie ausählen</option>
+                            <option value="kunden_nr" {{ @$_GET['category'] == 'kunden_nr' ? 'selected' : '' }}>Kunden-Nr</option>
+                            <option value="firmenname" {{ @$_GET['category'] == 'firmenname' ? 'selected' : '' }}>Firmenname</option>
+                            <option value="kundenname" {{ @$_GET['category'] == 'kundenname' ? 'selected' : '' }}>Kundenname</option>
+                            <option value="label" {{ @$_GET['category'] == 'label' ? 'selected' : '' }}>Label</option>
+                            <option value="email" {{ @$_GET['category'] == 'email' ? 'selected' : '' }}>E-mail</option>
                         </select>
                     </div>
                     <div class="d-flex align-items-center bg-white px-3">
@@ -204,14 +209,12 @@
                                                 @if (Auth::user()->role == 'Admin')
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                                            href="#"><i
-                                                                class="fs-4 ti ti-edit"></i>Edit</a>
+                                                            href="{{ url('/Leads/edit') }}/{{ $row->id }}">Bearbeiten</a>
                                                     </li>
                                                 @endif
                                                 <li>
                                                     <a class="dropdown-item d-flex align-items-center gap-3 delete"
-                                                        href="#"><i
-                                                            class="fs-4 ti ti-trash"></i>Delete</a>
+                                                        href="{{ url('/Leads/delete') }}/{{ $row->id }}">Löschen</a>
                                                 </li>
                                             </ul>
                                         </div>

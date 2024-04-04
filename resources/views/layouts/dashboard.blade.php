@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="{{ asset('public') }}/dist/libs/owl.carousel/dist/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="{{ asset('public') }}/dist/libs/sweetalert2/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="{{ asset('public') }}/dist/libs/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet"
+        href="{{ asset('public') }}/dist/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
     @yield('css')
     <!-- Core Css -->
     <link id="themeColors" rel="stylesheet" href="{{ asset('public') }}/dist/css/style.min.css" />
@@ -704,6 +706,7 @@
     <script src="{{ asset('public') }}/dist/js/dashboard.js"></script>
     <script src="{{ asset('public') }}/dist/libs/bootstrap-material-datetimepicker/node_modules/moment/moment.js"></script>
     <script src="{{ asset('public') }}/dist/libs/daterangepicker/daterangepicker.js"></script>
+    <script src="{{ asset('public') }}/dist/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
     @if (Session::has('success'))
         <script>
             Swal.fire({

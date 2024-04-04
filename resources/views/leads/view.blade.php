@@ -132,8 +132,8 @@
                 <div class="d-flex col-lg-4 col-md-4 col-12">
                 </div>
                 <div class="col-lg-2 col-md-2 col-12 text-end">
-                    <button type="button" class="btn btn bg-white mt-3" style="white-space: nowrap;"><i
-                            class="fa fa-plus me-2"></i> label</button>
+                    {{-- <button type="button" class="btn btn bg-white mt-3" style="white-space: nowrap;"><i
+                            class="fa fa-plus me-2"></i> label</button> --}}
                 </div>
             </div>
         </form>
@@ -174,9 +174,9 @@
                                 <th>
                                     <h6 class="fs-4 fw-semibold mb-0">Titel</h6>
                                 </th>
-                                <th>
+                                {{-- <th>
                                     <h6 class="fs-4 fw-semibold mb-0">Nächste Aktivität</h6>
-                                </th>
+                                </th> --}}
                                 <th>
                                     <h6 class="fs-4 fw-semibold mb-0">Labels</h6>
                                 </th>
@@ -187,7 +187,7 @@
                                     <h6 class="fs-4 fw-semibold mb-0">Lead erstellt</h6>
                                 </th>
                                 <th>
-                                    <h6 class="fs-4 fw-semibold mb-0">Besitzer</h6>
+                                    <h6 class="fs-4 fw-semibold mb-0">Kundenbetreuer</h6>
                                 </th>
                                 <th>
                                     <h6 class="fs-4 fw-semibold mb-0">Kunden-Nr</h6>
@@ -199,6 +199,9 @@
                         </thead>
                         <tbody>
                             @foreach ($leads as $row)
+                            @php
+                                $user = DB::table('users')->where('id',$row->kundenbetreuer)->first();
+                            @endphp
                                 <tr>
                                     <td>
                                         <p class="mb-0 fw-normal">{{ $row->vnr }}</p>
@@ -212,14 +215,14 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         <div class="d-flex align-items-center">
                                             <div class="">
                                                 <h6 class="fs-4 fw-normal mb-0">
                                                 </h6>
                                             </div>
                                         </div>
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         @if ($row->grund == 'Privat')
                                             <span class="badge fw-semibold py-1 w-85 bg-primary text-white">Privat</span>
@@ -230,14 +233,14 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal"></p>
+                                        <p class="mb-0 fw-normal">{{ $row->quelle }}</p>
                                     </td>
                                     <td>
                                         <p class="mb-0 fw-normal">{{ date('d. M. Y, H:i', strtotime($row->created_at)) }}
                                         </p>
                                     </td>
                                     <td>
-                                        <p class="mb-0 fw-normal">Volkan</p>
+                                        <p class="mb-0 fw-normal">{{ @$user->name }} {{ @$user->last_name }}</p>
                                     </td>
                                     <td>
                                         <p class="mb-0 fw-normal">{{ $row->customer_number }}</p>

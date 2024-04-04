@@ -20,6 +20,11 @@
                         <i class="ti ti-chevron-right fs-6 me-3"></i>
                         <select name="" id="" style="border: none;" class="form-control">
                             <option value="">Kategorie ausählen</option>
+                            <option value="kunden_nr" {{ @$_GET['category'] == 'kunden_nr' ? 'selected' : '' }}>Lieferanten-Nr</option>
+                            <option value="firmenname" {{ @$_GET['category'] == 'firmenname' ? 'selected' : '' }}>Firmenname</option>
+                            <option value="bundesland" {{ @$_GET['category'] == 'bundesland' ? 'selected' : '' }}>Bundesland</option>
+                            <option value="plz" {{ @$_GET['category'] == 'plz' ? 'selected' : '' }}>Plz</option>
+                            <option value="email" {{ @$_GET['category'] == 'email' ? 'selected' : '' }}>E-mail</option>
                         </select>
                     </div>
                     <div class="d-flex align-items-center bg-white px-3">

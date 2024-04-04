@@ -19,24 +19,34 @@ class StammdatenController extends Controller
     public function view(Request $request)
     {
         $title = $this->title;
+        $category = @$request->get('category');
         $search = @$request->get('search');
-        // $users = DB::table('users')
-        //     ->where(function ($query) use ($search) {
-        //         if (!empty($search)) {
-        //             $query->where('name', 'LIKE', '%' . $search . '%')
-        //                 ->orWhere('last_name', 'LIKE', '%' . $search . '%')
-        //                 ->orWhere('email', 'LIKE', '%' . $search . '%')
-        //                 ->orWhere('phone', 'LIKE', '%' . $search . '%')
-        //                 ->orWhere('address', 'LIKE', '%' . $search . '%');
-        //         }
-        //     })
-        //     ->orderBy('id', 'desc')->paginate(20);
-        // $users->appends([
-        //     "search" => $search,
-        // ]);
-        $leads = DB::table('leads')->where('is_deleted',0)->where('in_deal',1)->paginate(20);
+        $leads = DB::table('leads')->where('is_deleted', 0)->where('in_deal', 1)
+            ->where(function ($query) use ($category, $search) {
+                if (empty($category)) {
+                    $query->where('customer_number', 'LIKE', '%' . $search . '%')
+                        ->orWhere('firstname', 'LIKE', '%' . $search . '%')
+                        ->orWhere('lastname', 'LIKE', '%' . $search . '%')
+                        ->orWhere('firmaoptional', 'LIKE', '%' . $search . '%')
+                        ->orWhere('email', 'LIKE', '%' . $search . '%')
+                        ->orWhere('grund', 'LIKE', '%' . $search . '%');
+                } elseif (!empty($category)) {
+                    if ($category == "kunden_nr") {
+                        $query->where('customer_number', 'LIKE', '%' . $search . '%');
+                    } elseif ($category == "firmenname") {
+                        $query->where('firmaoptional', 'LIKE', '%' . $search . '%');
+                    } elseif ($category == "kundenname") {
+                        $query->where('firstname', 'LIKE', '%' . $search . '%')->orWhere('lastname', 'LIKE', '%' . $search . '%');
+                    } elseif ($category == "label") {
+                        $query->where('grund', 'LIKE', '%' . $search . '%');
+                    } elseif ($category == "email") {
+                        $query->where('email', 'LIKE', '%' . $search . '%');
+                    }
+                }
+            })
+            ->paginate(20);
 
-        return view("stammdaten.view", compact("title","leads"));
+        return view("stammdaten.view", compact("title", "leads"));
     }
     public function add()
     {

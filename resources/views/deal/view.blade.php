@@ -215,16 +215,30 @@
                             class="fa fa-plus"></i> Neukunde</button>
                     <div class="d-flex align-items-center bg-white px-3 me-3">
                         <i class="ti ti-chevron-right fs-6 me-3"></i>
-                        <select name="" id="" style="border: none;" class="form-control">
+                        <select name="category" id="category" style="border: none;" class="form-control">
                             <option value="">Kategorie ausählen</option>
+                            <option value="kunden_nr" {{ @$_GET['category'] == 'kunden_nr' ? 'selected' : '' }}>Kunden-Nr
+                            </option>
+                            <option value="firmenname" {{ @$_GET['category'] == 'firmenname' ? 'selected' : '' }}>
+                                Firmenname</option>
+                            <option value="kundenname" {{ @$_GET['category'] == 'kundenname' ? 'selected' : '' }}>
+                                Kundenname</option>
+                            <option value="phase" {{ @$_GET['category'] == 'phase' ? 'selected' : '' }}>
+                                Phase</option>
+                            <option value="label" {{ @$_GET['category'] == 'label' ? 'selected' : '' }}>Label</option>
+                            <option value="email" {{ @$_GET['category'] == 'email' ? 'selected' : '' }}>E-mail</option>
                         </select>
                     </div>
                     <div class="d-flex align-items-center bg-white px-3">
                         <i class="ti ti-search fs-8 me-3"></i>
                         <input type="text" class="form-control me-1" style="border: none;" placeholder="Suchen"
-                            name="search" value="{{ @$_GET['search'] }}">
+                            name="search" id="search" value="{{ @$_GET['search'] }}">
                     </div>
-                    {{-- <button type="submit" class="btn btn-submit">Search</button> --}}
+                </div>
+                <div class="d-flex col-lg-3 col-md-3 col-12 mb-3 py-3 px-2">
+                </div>
+                <div class="d-flex col-lg-1 col-md-1 col-12 mb-3 py-3 px-2">
+                    <button type="button" id="btn-export" class="btn btn bg-white">Export</button>
                 </div>
             </div>
         </form>
@@ -412,20 +426,6 @@
     </script>
     <script>
         function confirmPhaseUpdate(url) {
-            // Swal.fire({
-            //         title: "Are you sure?",
-            //         text: "Once updated, you cannot revert this action!",
-            //         icon: "warning",
-            //         buttons: ["Cancel", "Update"],
-            //         dangerMode: true,
-            //     })
-            //     .then((willUpdate) => {
-            //         if (willUpdate) {
-            //             window.location = url;
-            //         } else {
-            //             Swal.fire("Update cancelled!");
-            //         }
-            //     });
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
@@ -440,5 +440,40 @@
                 }
             });
         }
+        $('#btn-export').on('click', function() {
+            var category = $('#category option:selected').val();
+            var search = $('#search').val();
+
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('exportcsv') }}",
+                data: {
+                    category: category,
+                    search: search
+                },
+                success: function(response) {
+                    // Create Blob object from CSV data
+                    var blob = new Blob([response], {
+                        type: 'text/csv'
+                    });
+
+                    // Create download link
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'export.csv';
+
+                    // Append link to body and trigger click
+                    document.body.appendChild(link);
+                    link.click();
+
+                    // Cleanup
+                    document.body.removeChild(link);
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    console.error(xhr.responseText);
+                }
+            });
+        });
     </script>
 @endsection
