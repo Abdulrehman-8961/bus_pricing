@@ -83,7 +83,7 @@ Route::post('/Link/save', [App\Http\Controllers\HomeController::class, 'settingS
 
 Route::get('/Leads', [LeadsController::class, 'view'])->middleware('isAdminDispatcher');
 Route::get('/Coron-Leads', [CoronController::class, 'getLeads']);
-// Route::post('/Employee/save', [UserController::class, 'save'])->middleware('isAdmin');
+Route::post('/Lead/save', [LeadsController::class, 'save'])->middleware('isAdmin');
 Route::get('/Leads/edit/{id}', [LeadsController::class, 'edit'])->middleware('isAdmin');
 Route::post('/Leads/update/{id}', [LeadsController::class, 'updateLead'])->middleware('isAdmin');
 Route::post('/update-Employee/{id}', [LeadsController::class, 'updateEmployee'])->middleware('isAdmin');
@@ -91,6 +91,7 @@ Route::post('/update-label/{id}', [LeadsController::class, 'updateLabel'])->midd
 Route::post('/update-quelle/{id}', [LeadsController::class, 'updateQuelle'])->middleware('isAdmin');
 Route::get('/Leads/delete/{id}', [LeadsController::class, 'delete'])->middleware('isAdmin');
 Route::get('/Transfer-To-Deal/{id}', [LeadsController::class, 'transferToDeal'])->middleware('isAdmin');
+Route::post('/upload_file/{id}', [LeadsController::class, 'upload'])->middleware('isAdmin');
 
 
 Route::get('/Stammdaten', [StammdatenController::class, 'view'])->middleware('isAdminDispatcher');

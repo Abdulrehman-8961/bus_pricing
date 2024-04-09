@@ -33,9 +33,33 @@
             </div>
         @endif --}}
 
+
+
+
+        <form class="container-fluid" method="GET" action="{{ url()->current() }}">
+            <div class="row">
+                <div class="d-flex col-lg-6 col-md-6 col-12 mb-3 py-3 px-2">
+                    <button id="btn-add" type="button" class="btn btn-success me-3" style="white-space: nowrap;"><i
+                            class="fa fa-plus"></i> lead</button>
+                    <div class="d-flex align-items-center bg-white px-3">
+                        <i class="ti ti-search fs-8 me-3"></i>
+                        <input type="text" class="form-control me-1" style="border: none;" placeholder="Suchen"
+                            name="search" value="{{ @$_GET['search'] }}">
+                    </div>
+                    {{-- <button type="submit" class="btn btn-submit">Search</button> --}}
+                </div>
+                <div class="d-flex col-lg-4 col-md-4 col-12">
+                </div>
+                <div class="col-lg-2 col-md-2 col-12 text-end">
+                    {{-- <button type="button" class="btn btn bg-white mt-3" style="white-space: nowrap;"><i
+                            class="fa fa-plus me-2"></i> label</button> --}}
+                </div>
+            </div>
+        </form>
+
         <div class="card w-100 position-relative overflow-hidden add-user-card {{ $errors->any() ? '' : 'd-none' }}">
             <div class="card-body p-4">
-                <form method="POST" class="container-fluid" action="{{ url('/Leads/save') }}">@csrf
+                <form method="POST" class="container-fluid" action="{{ url('/Lead/save') }}">@csrf
                     <div class="row">
                         <div class="col-lg-4 col-12">
                             <div class="mb-3">
@@ -71,15 +95,62 @@
                             </div>
                         </div>
                         <div class="col-lg-4 col-12">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Phone</label>
+                                <input type="number" class="form-control @error('phone') is-invalid @enderror"
+                                    value="{{ old('phone') }}" name="phone" id="exampleInputphone1"
+                                    aria-describedby="phoneHelp">
+                                @error('phone')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-12">
                             <div class="mb-4">
-                                <label for="role" class="form-label">Role</label>
-                                <select class="form-control" name="role" id="role">
+                                <label for="label" class="form-label">Labels</label>
+                                <select class="form-control" name="label" id="label">
                                     <option value="">Select Value</option>
-                                    <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
-                                    <option value="Dispatcher" {{ old('role') == 'Dispatcher' ? 'selected' : '' }}>
-                                        Dispatcher</option>
-                                    <option value="Employee" {{ old('role') == 'Employee' ? 'selected' : '' }}>Employee
+                                    <option value="Schule" {{ old('label') == 'Schule' ? 'selected' : '' }}>Schule</option>
+                                    <option value="Verein" {{ old('label') == 'Verein' ? 'selected' : '' }}>
+                                        Verein</option>
+                                    <option value="Privat" {{ old('label') == 'Privat' ? 'selected' : '' }}>Privat
                                     </option>
+                                </select>
+                                @error('phone_number')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-12">
+                            <div class="mb-4">
+                                <label for="quelle" class="form-label">Quelle</label>
+                                <select class="form-control" name="quelle" id="quelle">
+                                    <option value="">Select Value</option>
+                                    <option value="E-Mail" {{ old('quelle') == 'E-Mail' ? 'selected' : '' }}>E-Mail
+                                    </option>
+                                    <option value="Online" {{ old('quelle') == 'Online' ? 'selected' : '' }}>
+                                        Online</option>
+                                    <option value="Anruf" {{ old('quelle') == 'Anruf' ? 'selected' : '' }}>Anruf
+                                    </option>
+                                </select>
+                                @error('phone_number')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        @php
+                            $employee = DB::table('users')->where('role', 'Employee')->get();
+                        @endphp
+                        <div class="col-lg-4 col-12">
+                            <div class="mb-4">
+                                <label for="" class="form-label">Kundenbetreuer</label>
+                                <select class="form-control" name="kundenbetreuer" id="">
+                                    <option value="">Select Value</option>
+                                    @foreach ($employee as $row)
+                                        <option value="{{ $row->id }}">
+                                            {{ $row->name }} {{ $row->last_name }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 @error('phone_number')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -88,20 +159,50 @@
                         </div>
                         <div class="col-lg-4 col-12 ">
                             <div class="mb-4">
-                                <label for="exampleInputPassword1" class="form-label">Password</label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                    name="password" id="exampleInputPassword1">
-                                @error('password')
+                                <label for="" class="form-label">Hinfahrt</label>
+                                <input type="date" class="form-control @error('hinfahrt') is-invalid @enderror"
+                                    name="hinfahrt" id="hinfahrt">
+                                @error('hinfahrt')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
                         <div class="col-lg-4 col-12 ">
                             <div class="mb-4">
-                                <label for="exampleInputPassword2" class="form-label">Password Confirmation</label>
-                                <input type="password" class="form-control @error('confirm_password') is-invalid @enderror"
-                                    name="confirm_password" id="exampleInputPassword2">
-                                @error('confirm_password')
+                                <label for="" class="form-label">Rückfahrt</label>
+                                <input type="date" class="form-control @error('rückfahrt') is-invalid @enderror"
+                                    name="rückfahrt" id="rückfahrt">
+                                @error('rückfahrt')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-12 ">
+                            <div class="mb-4">
+                                <label for="" class="form-label">Pax</label>
+                                <input type="number" class="form-control @error('pax') is-invalid @enderror"
+                                    name="pax" id="pax">
+                                @error('pax')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-12 ">
+                            <div class="mb-4">
+                                <label for="" class="form-label">Entfernung</label>
+                                <input type="number" class="form-control @error('entfernung') is-invalid @enderror"
+                                    name="entfernung" id="entfernung">
+                                @error('entfernung')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-12 ">
+                            <div class="mb-4">
+                                <label for="" class="form-label">Notizen</label>
+                                <input type="text" class="form-control @error('notizen') is-invalid @enderror"
+                                    name="notizen" id="notizen">
+                                @error('notizen')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -115,28 +216,6 @@
                 </form>
             </div>
         </div>
-
-
-        <form class="container-fluid" method="GET" action="{{ url()->current() }}">
-            <div class="row">
-                <div class="d-flex col-lg-6 col-md-6 col-12 mb-3 py-3 px-2">
-                    <button type="button" class="btn btn-success me-3" style="white-space: nowrap;"><i
-                            class="fa fa-plus"></i> lead</button>
-                    <div class="d-flex align-items-center bg-white px-3">
-                        <i class="ti ti-search fs-8 me-3"></i>
-                        <input type="text" class="form-control me-1" style="border: none;" placeholder="Suchen"
-                            name="search" value="{{ @$_GET['search'] }}">
-                    </div>
-                    {{-- <button type="submit" class="btn btn-submit">Search</button> --}}
-                </div>
-                <div class="d-flex col-lg-4 col-md-4 col-12">
-                </div>
-                <div class="col-lg-2 col-md-2 col-12 text-end">
-                    {{-- <button type="button" class="btn btn bg-white mt-3" style="white-space: nowrap;"><i
-                            class="fa fa-plus me-2"></i> label</button> --}}
-                </div>
-            </div>
-        </form>
 
 
         <div class="card w-100 position-relative overflow-hidden">
@@ -199,9 +278,11 @@
                         </thead>
                         <tbody>
                             @foreach ($leads as $row)
-                            @php
-                                $user = DB::table('users')->where('id',$row->kundenbetreuer)->first();
-                            @endphp
+                                @php
+                                    $user = DB::table('users')
+                                        ->where('id', $row->kundenbetreuer)
+                                        ->first();
+                                @endphp
                                 <tr>
                                     <td>
                                         <p class="mb-0 fw-normal">{{ $row->vnr }}</p>
@@ -228,8 +309,10 @@
                                             <span class="badge fw-semibold py-1 w-85 bg-primary text-white">Privat</span>
                                         @elseif($row->grund == 'Verein')
                                             <span class="badge fw-semibold py-1 w-85 bg-warning">Verein</span>
+                                        @elseif($row->grund == 'Firma')
+                                            <span class="badge fw-semibold py-1 w-85 bg-danger">Firma</span>
                                         @else
-                                            <span class="badge fw-semibold py-1 w-85 bg-danger">Schule</span>
+                                            <span class="badge fw-semibold py-1 w-85 bg-info">Firma</span>
                                         @endif
                                     </td>
                                     <td>
