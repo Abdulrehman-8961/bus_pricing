@@ -108,15 +108,27 @@
                         <div class="col-lg-4 col-12">
                             <div class="mb-4">
                                 <label for="label" class="form-label">Labels</label>
-                                <select class="form-control" name="label" id="label">
+                                <select class="form-control" name="label" id="label_field">
                                     <option value="">Select Value</option>
                                     <option value="Schule" {{ old('label') == 'Schule' ? 'selected' : '' }}>Schule</option>
+                                    <option value="Firma" {{ old('label') == 'Firma' ? 'selected' : '' }}>Firma</option>
                                     <option value="Verein" {{ old('label') == 'Verein' ? 'selected' : '' }}>
                                         Verein</option>
                                     <option value="Privat" {{ old('label') == 'Privat' ? 'selected' : '' }}>Privat
                                     </option>
                                 </select>
                                 @error('phone_number')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-12 firma d-none">
+                            <div class="mb-3">
+                                <label for="firma_name" class="form-label">Firma Name</label>
+                                <input type="text" class="form-control @error('firma_name') is-invalid @enderror"
+                                    value="{{ old('firma_name') }}" name="firma_name" id="firma_name"
+                                    aria-describedby="firma_name">
+                                @error('firma_name')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -206,6 +218,30 @@
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
+                        </div>
+                        <div class="row mb-4">
+                            <h4 class="mb-3">Address</h4>
+                            <div class="col-md-3">
+                                <label for="" class="form-label">Supplement</label>
+                                <input type="text" name="supplement" class="form-control" value="{{ old('supplement') }}" placeholder="Additional address information">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="" class="form-label">Street</label>
+                                <input type="text" name="street" class="form-control" value="{{ old('street') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="" class="form-label">Zip Code</label>
+                                <input type="number" name="zip_code" class="form-control" value="{{ old('zip_code') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="" class="form-label">Country</label>
+                                <input type="text" name="country" class="form-control" value="{{ old('country') }}">
+                            </div>
+                            <div class="col-md-1">
+                                <label for="" class="form-label">Country Code</label>
+                                <input type="text" name="country_code" class="form-control" value="{{ old('country_code') }}">
+                            </div>
+
                         </div>
                         <div class="col-md-12 mb-4">
                             <button type="submit" class="btn btn-success me-2">speichern</button>
@@ -374,6 +410,15 @@
                 $('.add-user-card').removeClass('d-none');
             } else {
                 $('.add-user-card').addClass('d-none');
+            }
+        })
+        $(document).on('change','#label_field', function(){
+            var value = $('#label_field option:selected').val();
+            console.log(value);
+            if(value == "Firma"){
+                $('.firma').removeClass('d-none');
+            } else {
+                $('.firma').addClass('d-none');
             }
         })
     </script>

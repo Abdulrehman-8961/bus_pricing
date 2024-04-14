@@ -34,7 +34,7 @@ class LeadsController extends Controller
                         ->orWhere('customer_number', 'LIKE', '%' . $search . '%');
                 }
             })
-            ->orderBy('id','desc')
+            ->orderBy('id', 'desc')
             ->paginate(20);
 
         return view("leads.view", compact("title", "leads"));
@@ -219,17 +219,52 @@ class LeadsController extends Controller
 
     public function save(Request $request)
     {
+        // dd($request->all());
+        $request->validate([
+            'name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required',
+            'label' => 'required',
+        ]);
         $accessToken = "iwnyrX7KxxpmvHDMaJcy60_I7z0TD3J9D2S6jOvxrFbBcQ4E";
         $data = array(
-
             'roles' => array(
                 'customer' => array('active' => true)
             ),
-            'person' => array(
-                'firstName' => @$request->name,
-                'lastName' => @$request->last_name,
+            'company' => array(
+                'name' => isset($request->firma_name) ? $request->firma_name : '',
+                'contactPersons' => array(
+                    array(
+                        'firstName' => isset($request->name) ? $request->name : '',
+                        'lastName' => isset($request->last_name) ? $request->last_name : '',
+                        'primary' => true,
+                        'emailAddress' => isset($request->email) ? $request->email : '',
+                        'phoneNumber' => isset($request->phone) ? $request->phone : '',
+                    )
+                ),
             ),
-            'note' => 'Notiz2en'
+            'addresses' => array(
+                'billing' => array(
+                    array(
+                        "supplement" => isset($request->supplement) ? $request->supplement : '',
+                        "street" => isset($request->street) ? $request->street : '',
+                        "zip" => isset($request->zip_code) ? $request->zip_code : '',
+                        "city" => isset($request->city) ? $request->city : '',
+                        "countryCode" => isset($request->country_code) ? $request->country_code : ''
+                    )
+                ),
+            ),
+            'emailAddresses' => array(
+                'private' => array(
+                    isset($request->email) ? $request->email : '',
+                )
+            ),
+            'phoneNumbers' => array(
+                'private' => array(
+                    isset($request->email) ? $request->email : '',
+                )
+            ),
+            'note' => @$request->notizen
         );
 
         $ch = curl_init();
@@ -284,6 +319,7 @@ class LeadsController extends Controller
                 'customer_number' => @$customerNumber,
                 'firstname' => @$request->name,
                 'lastname' => @$request->last_name,
+                'firmaoptional' => @$request->firma_name,
                 'email' => @$request->email,
                 'phone' => @$request->phone,
                 'grund' => @$request->label,
@@ -295,6 +331,7 @@ class LeadsController extends Controller
                 'notizer' => @$request->notizen,
                 'resuorceid' => @$resuorceid,
                 'resourceuri' => @$resourceUri,
+                'start' => @$request->street.' '.@$request->zip_code.' '.@$request->city,
             ]);
             return redirect()->back()->with('success', 'Lead Added');
         }
