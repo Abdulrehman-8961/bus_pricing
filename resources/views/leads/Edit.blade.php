@@ -60,8 +60,8 @@
                     <div class="d-flex">
                         <h4 class="mb-4 me-3"><span class="fw-bolder">VNR</span>: {{ $leads->vnr }}</h4>
                         <h4 class="mb-4 me-3"><span class="fw-bolder">Kunden-Nr</span>: {{ $leads->customer_number }}</h4>
-                        <h4 class="mb-4"><span class="fw-bolder">Company</span>: <span style="cursor: pointer;"
-                            onclick="edit('{{ $company_name }}','company_name','Company Name')">{{ $company_name }}</span></h4>
+                        {{-- <h4 class="mb-4"><span class="fw-bolder">Company</span>: <span style="cursor: pointer;"
+                            onclick="edit('{{ $company_name }}','company_name','Company Name')">{{ $company_name }}</span></h4> --}}
                     </div>
                     <a href="{{ url('/Transfer-To-Deal') }}/{{ $leads->id }}" class="btn-success mb-4">In Deal
                         umwandeln</a>
@@ -81,6 +81,8 @@
                                         <option value="Privat" {{ $leads->grund == 'Privat' ? 'selected' : '' }}>Privat
                                         </option>
                                         <option value="Verein" {{ $leads->grund == 'Verein' ? 'selected' : '' }}>Verein
+                                        </option>
+                                        <option value="Firma" {{ $leads->grund == 'Firma' ? 'selected' : '' }}>Firma
                                         </option>
                                         <option value="Schule&#047;Universität"
                                             {{ $leads->grund == 'Schule&#047;Universität' ? 'selected' : '' }}>Schule
@@ -169,13 +171,14 @@
                         <div class="mb-3 d-flex justify-content-between align-items-center" style="margin-top: 30px;">
                             <div class="d-flex">
                                 <i class="ti ti-building me-3"></i>
-                                <p class=""> </p>
+                                <p class="" style="cursor: pointer;"
+                                @if(@$company_name) onclick="edit('{{ $company_name }}','company_name','Company Name')" @endif> {{ $company_name ? $company_name : 'Firmenname nicht vorhanden' }} </p>
                             </div>
                         </div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
                             <div class="d-flex">
-                                <p>Address:</p>
-                                <p>{{ $combinedAddress }}</p>
+                                <p>Adresse: </p>
+                                <p>{{ $combinedAddress ? $combinedAddress : 'Adresse nicht vorhanden' }}</p>
                             </div>
                         </div>
                     </div>
@@ -217,10 +220,10 @@
                         </div>
                         <div class="mb-3">
                             <p class="mb-3" style="cursor: pointer;"
-                                onclick="edit('{{ $leads->notizer }}','notizer','Notizer')"><u>Notizen</u><span></span>
+                                onclick="edit('{{ $leads->notizer }}','notizer','Notizen')"><u>Notizen</u><span></span>
                             </p>
                             <p class="mb-0" style="cursor: pointer;"
-                                onclick="edit('{{ $leads->notizer }}','notizer','Notizer')">{{ $leads->notizer }}</p>
+                                onclick="edit('{{ $leads->notizer }}','notizer','Notizen')">{{ $leads->notizer }}</p>
                         </div>
                     </div>
                     <div class="col-md-6" style="margin-top: -60px;">

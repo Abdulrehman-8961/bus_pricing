@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Auth;
+use Exception;
 
 class LeadsController extends Controller
 {
@@ -404,61 +405,110 @@ class LeadsController extends Controller
             'arrival_point' => 'required'
         ]);
         $accessToken = "iwnyrX7KxxpmvHDMaJcy60_I7z0TD3J9D2S6jOvxrFbBcQ4E";
-        $data = array(
-            'roles' => array(
-                'customer' => array('active' => true)
-            ),
-            'company' => array(
-                'name' => isset($request->firma_name) ? $request->firma_name : '',
-                'contactPersons' => array(
-                    array(
+        try {
+            if ($request->label != "Privat") {
+                $data = array(
+                    'roles' => array(
+                        'customer' => array('active' => true)
+                    ),
+                    'company' => array(
+                        'name' => isset($request->firma_name) ? $request->firma_name : '',
+                        'contactPersons' => array(
+                            array(
+                                'firstName' => isset($request->name) ? $request->name : '',
+                                'lastName' => isset($request->last_name) ? $request->last_name : '',
+                                'primary' => true,
+                                'emailAddress' => isset($request->email) ? $request->email : '',
+                                'phoneNumber' => isset($request->phone) ? $request->phone : '',
+                            )
+                        ),
+                    ),
+                    'addresses' => array(
+                        'billing' => array(
+                            array(
+                                "supplement" => isset($request->supplement) ? $request->supplement : '',
+                                "street" => isset($request->street) ? $request->street : '',
+                                "zip" => isset($request->zip_code) ? $request->zip_code : '',
+                                "city" => isset($request->city) ? $request->city : '',
+                                "countryCode" => isset($request->country_code) ? $request->country_code : ''
+                            )
+                        ),
+                    ),
+                    'emailAddresses' => array(
+                        'private' => array(
+                            isset($request->email) ? $request->email : '',
+                        )
+                    ),
+                    'phoneNumbers' => array(
+                        'private' => array(
+                            isset($request->phone) ? $request->phone : '',
+                        )
+                    ),
+                    'note' => @$request->notizen
+                );
+            } else {
+                $data = array(
+                    'roles' => array(
+                        'customer' => array('active' => true)
+                    ),
+                    'person' => array(
                         'firstName' => isset($request->name) ? $request->name : '',
                         'lastName' => isset($request->last_name) ? $request->last_name : '',
-                        'primary' => true,
-                        'emailAddress' => isset($request->email) ? $request->email : '',
-                        'phoneNumber' => isset($request->phone) ? $request->phone : '',
-                    )
-                ),
-            ),
-            'addresses' => array(
-                'billing' => array(
-                    array(
-                        "supplement" => isset($request->supplement) ? $request->supplement : '',
-                        "street" => isset($request->street) ? $request->street : '',
-                        "zip" => isset($request->zip_code) ? $request->zip_code : '',
-                        "city" => isset($request->city) ? $request->city : '',
-                        "countryCode" => isset($request->country_code) ? $request->country_code : ''
-                    )
-                ),
-            ),
-            'emailAddresses' => array(
-                'private' => array(
-                    isset($request->email) ? $request->email : '',
-                )
-            ),
-            'phoneNumbers' => array(
-                'private' => array(
-                    isset($request->email) ? $request->email : '',
-                )
-            ),
-            'note' => @$request->notizen
-        );
+                    ),
+                    'addresses' => array(
+                        'billing' => array(
+                            array(
+                                "supplement" => isset($request->supplement) ? $request->supplement : '',
+                                "street" => isset($request->street) ? $request->street : '',
+                                "zip" => isset($request->zip_code) ? $request->zip_code : '',
+                                "city" => isset($request->city) ? $request->city : '',
+                                "countryCode" => isset($request->country_code) ? $request->country_code : ''
+                            )
+                        ),
+                    ),
+                    'emailAddresses' => array(
+                        'private' => array(
+                            isset($request->email) ? $request->email : '',
+                        )
+                    ),
+                    'phoneNumbers' => array(
+                        'private' => array(
+                            isset($request->phone) ? $request->phone : '',
+                        )
+                    ),
+                    'note' => @$request->notizen
+                );
+            }
 
-        $ch = curl_init();
+            $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, 'https://api.lexoffice.io/v1/contacts');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Authorization: Bearer ' . $accessToken,
-            'Content-Type: application/json',
-            'Accept: application/json'
-        ));
+            curl_setopt($ch, CURLOPT_URL, 'https://api.lexoffice.io/v1/contacts');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Authorization: Bearer ' . $accessToken,
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ));
 
-        $response = curl_exec($ch);
+            $response = curl_exec($ch);
+
+            $decodedResponse = json_decode($response, true);
+            if (isset($decodedResponse['IssueList'])) {
+                $errorMessages = [];
+                foreach ($decodedResponse['IssueList'] as $issue) {
+                    $errorMessages[] = $issue['i18nKey'];
+                }
+                throw new Exception(implode(', ', $errorMessages));
+            }
+        } catch (Exception $e) {
+            // echo "Error: " . $e->getMessage();
+            return redirect()->back()->with('error', 'Etwas ist schief gelaufen. Bitte versuche es erneut');
+        }
 
 
+        // dd($response);
 
         $responseArray = json_decode($response, true);
 
@@ -491,6 +541,16 @@ class LeadsController extends Controller
             $responseArray2 = json_decode($response2, true);
             $customerNumber = $responseArray2['roles']['customer']['number'];
 
+            $hinfahrtParts = explode('T', @$request->hinfahrt);
+            $hinfahrt = @$hinfahrtParts[0];
+            $menu_731 = @$hinfahrtParts[0];
+
+            $rückfahrtParts = explode('T', @$request->rückfahrt);
+            $rückfahrt = @$rückfahrtParts[0];
+            $menu_732 = @$rückfahrtParts[0];
+
+            // dd($hinfahrtParts,$rückfahrtParts);
+
             DB::table('leads')->insert([
                 'vnr' => @$new_no,
                 'customer_number' => @$customerNumber,
@@ -500,8 +560,10 @@ class LeadsController extends Controller
                 'email' => @$request->email,
                 'phone' => @$request->phone,
                 'grund' => @$request->label,
-                'hinfahrt' => @$request->hinfahrt,
-                'rueckfahrtt' => @$request->rückfahrt,
+                'hinfahrt' => @$hinfahrt,
+                'menu_731' => @$menu_731,
+                'rueckfahrtt' => @$rückfahrt,
+                'menu_732' => @$menu_732,
                 'pax' => @$request->pax,
                 'kundenbetreuer' => @$request->kundenbetreuer,
                 'quelle' => @$request->quelle,

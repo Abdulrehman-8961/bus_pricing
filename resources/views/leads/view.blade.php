@@ -61,46 +61,21 @@
             <div class="card-body p-4">
                 <form method="POST" class="container-fluid" action="{{ url('/Lead/save') }}">@csrf
                     <div class="row">
+                        @php
+                            $employee = DB::table('users')->where('role', 'Employee')->get();
+                        @endphp
                         <div class="col-lg-4 col-12">
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">First Name</label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    value="{{ old('name') }}" name="name" id="exampleInputEmail1"
-                                    aria-describedby="emailHelp">
-                                @error('name')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-12">
-                            <div class="mb-3">
-                                <label for="last_name" class="form-label">Last Name</label>
-                                <input type="text" class="form-control @error('last_name') is-invalid @enderror"
-                                    value="{{ old('last_name') }}" name="last_name" id="last_name"
-                                    aria-describedby="emailHelp">
-                                @error('last_name')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-12">
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Email</label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                    value="{{ old('email') }}" name="email" id="exampleInputEmail1"
-                                    aria-describedby="emailHelp">
-                                @error('email')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-12">
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Phone</label>
-                                <input type="number" class="form-control @error('phone') is-invalid @enderror"
-                                    value="{{ old('phone') }}" name="phone" id="exampleInputphone1"
-                                    aria-describedby="phoneHelp">
-                                @error('phone')
+                            <div class="mb-4">
+                                <label for="" class="form-label">Kundenbetreuer</label>
+                                <select class="form-control" name="kundenbetreuer" id="">
+                                    <option value="">Select Value</option>
+                                    @foreach ($employee as $row)
+                                        <option value="{{ $row->id }}">
+                                            {{ $row->name }} {{ $row->last_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('phone_number')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -109,7 +84,7 @@
                             <div class="mb-4">
                                 <label for="label" class="form-label">Labels</label>
                                 <select class="form-control" name="label" id="label_field">
-                                    <option value="">Select Value</option>
+                                    <option value="">bitte auswählen</option>
                                     <option value="Schule" {{ old('label') == 'Schule' ? 'selected' : '' }}>Schule</option>
                                     <option value="Firma" {{ old('label') == 'Firma' ? 'selected' : '' }}>Firma</option>
                                     <option value="Verein" {{ old('label') == 'Verein' ? 'selected' : '' }}>
@@ -118,17 +93,6 @@
                                     </option>
                                 </select>
                                 @error('phone_number')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-12 firma d-none">
-                            <div class="mb-3">
-                                <label for="firma_name" class="form-label">Firma Name</label>
-                                <input type="text" class="form-control @error('firma_name') is-invalid @enderror"
-                                    value="{{ old('firma_name') }}" name="firma_name" id="firma_name"
-                                    aria-describedby="firma_name">
-                                @error('firma_name')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -150,46 +114,49 @@
                                 @enderror
                             </div>
                         </div>
-                        @php
-                            $employee = DB::table('users')->where('role', 'Employee')->get();
-                        @endphp
-                        <div class="col-lg-4 col-12">
+                        <div class="col-lg-6 col-12 ">
                             <div class="mb-4">
-                                <label for="" class="form-label">Kundenbetreuer</label>
-                                <select class="form-control" name="kundenbetreuer" id="">
-                                    <option value="">Select Value</option>
-                                    @foreach ($employee as $row)
-                                        <option value="{{ $row->id }}">
-                                            {{ $row->name }} {{ $row->last_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('phone_number')
+                                <label for="" class="form-label">Abfahrtsort</label>
+                                <input size="40" class="form-control" aria-required="true" aria-invalid="false"
+                                    placeholder="e.g. Mohrenstraße 17, 10117 Berlin" value="" type="text"
+                                    name="departure_point">
+                                @error('departure_point')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-lg-4 col-12 ">
+                        <div class="col-lg-6 col-12 ">
                             <div class="mb-4">
-                                <label for="" class="form-label">Hinfahrt</label>
-                                <input type="date" class="form-control @error('hinfahrt') is-invalid @enderror"
+                                <label for="" class="form-label">Abfahrtsdatum und Uhrzeit</label>
+                                <input type="datetime-local" class="form-control @error('hinfahrt') is-invalid @enderror"
                                     name="hinfahrt" id="hinfahrt">
                                 @error('hinfahrt')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-lg-4 col-12 ">
+                        <div class="col-lg-6 col-12 ">
                             <div class="mb-4">
-                                <label for="" class="form-label">Rückfahrt</label>
-                                <input type="date" class="form-control @error('rückfahrt') is-invalid @enderror"
+                                <label for="" class="form-label">Ankunftsort</label>
+                                <input size="40" class="form-control" aria-required="true" aria-invalid="false"
+                                    placeholder="e.g. Am Wall 135, 28195 Bremen" value="" type="text"
+                                    name="arrival_point">
+                                @error('arrival_point')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12 ">
+                            <div class="mb-4">
+                                <label for="" class="form-label">Ankunftsdatum und Uhrzeit</label>
+                                <input type="datetime-local" class="form-control @error('rückfahrt') is-invalid @enderror"
                                     name="rückfahrt" id="rückfahrt">
                                 @error('rückfahrt')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-lg-4 col-12 ">
+                        <div class="col-lg-6 col-12 ">
                             <div class="mb-4">
                                 <label for="" class="form-label">Pax</label>
                                 <input type="number" class="form-control @error('pax') is-invalid @enderror"
@@ -199,9 +166,9 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-lg-4 col-12 ">
+                        <div class="col-lg-6 col-12 ">
                             <div class="mb-4">
-                                <label for="" class="form-label">Entfernung</label>
+                                <label for="" class="form-label">Entfernung in KM</label>
                                 <input type="number" class="form-control @error('entfernung') is-invalid @enderror"
                                     name="entfernung" id="entfernung">
                                 @error('entfernung')
@@ -209,7 +176,71 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-lg-4 col-12 ">
+                        <div class="col-lg-6 col-12">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Vorname</label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                    value="{{ old('name') }}" name="name" id="exampleInputEmail1"
+                                    aria-describedby="emailHelp">
+                                @error('name')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label">Nachname</label>
+                                <input type="text" class="form-control @error('last_name') is-invalid @enderror"
+                                    value="{{ old('last_name') }}" name="last_name" id="last_name"
+                                    aria-describedby="emailHelp">
+                                @error('last_name')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12 firma d-none">
+                            <div class="mb-3">
+                                <label for="firma_name" class="form-label">Firma Name</label>
+                                <input type="text" class="form-control @error('firma_name') is-invalid @enderror"
+                                    value="{{ old('firma_name') }}" name="firma_name" id="firma_name"
+                                    aria-describedby="firma_name">
+                                @error('firma_name')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12 firma d-none">
+
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">E-Mail</label>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                    value="{{ old('email') }}" name="email" id="exampleInputEmail1"
+                                    aria-describedby="emailHelp">
+                                @error('email')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Telefonnummer</label>
+                                <input type="number" class="form-control @error('phone') is-invalid @enderror"
+                                    value="{{ old('phone') }}" name="phone" id="exampleInputphone1"
+                                    aria-describedby="phoneHelp">
+                                @error('phone')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        {{-- <div class="col-lg-4 col-12 ">
                             <div class="mb-4">
                                 <label for="" class="form-label">Notizen</label>
                                 <input type="text" class="form-control @error('notizen') is-invalid @enderror"
@@ -218,43 +249,22 @@
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-12 ">
-                            <div class="mb-4">
-                                <label for="" class="form-label">Departure point</label>
-                                <input size="40" class="form-control" aria-required="true" aria-invalid="false" placeholder="e.g. Mohrenstraße 17, 10117 Berlin" value="" type="text" name="departure_point">
-                                @error('departure_point')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-12 ">
-                            <div class="mb-4">
-                                <label for="" class="form-label">Arrival point</label>
-                                <input size="40" class="form-control" aria-required="true" aria-invalid="false" placeholder="e.g. Am Wall 135, 28195 Bremen" value="" type="text" name="arrival_point">
-                                @error('arrival_point')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+                        </div> --}}
+
+
                         <div class="row mb-4">
                             <h4 class="mb-3">Address</h4>
                             <div class="col-md-3">
-                                <label for="" class="form-label">Supplement</label>
-                                <input type="text" name="supplement" class="form-control"
-                                    value="{{ old('supplement') }}" placeholder="Additional address information">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="" class="form-label">Street</label>
+                                <label for="" class="form-label">Straße </label>
                                 <input type="text" name="street" class="form-control" value="{{ old('street') }}">
                             </div>
                             <div class="col-md-2">
-                                <label for="" class="form-label">Zip Code</label>
+                                <label for="" class="form-label">PLZ</label>
                                 <input type="number" name="zip_code" class="form-control"
                                     value="{{ old('zip_code') }}">
                             </div>
                             <div class="col-md-2">
-                                <label for="" class="form-label">Country</label>
+                                <label for="" class="form-label">Land</label>
                                 <input type="text" name="country" class="form-control" value="{{ old('country') }}">
                             </div>
                             @php
@@ -265,7 +275,7 @@
                                 ];
                             @endphp
                             <div class="col-md-1">
-                                <label for="" class="form-label">Country Code</label>
+                                <label for="" class="form-label">Ländercode</label>
                                 <select class="form-control" name="country_code" id="country_code">
                                     @foreach ($countryCodes as $key => $row)
                                         <option value="{{ $key }}" {{ $key == 'de' ? 'selected' : '' }}>
@@ -381,7 +391,7 @@
                                         @elseif($row->grund == 'Firma')
                                             <span class="badge fw-semibold py-1 w-85 bg-danger">Firma</span>
                                         @else
-                                            <span class="badge fw-semibold py-1 w-85 bg-info">Firma</span>
+                                            <span class="badge fw-semibold py-1 w-85 bg-info">Schule</span>
                                         @endif
                                     </td>
                                     <td>
