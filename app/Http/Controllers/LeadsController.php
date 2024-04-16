@@ -49,14 +49,88 @@ class LeadsController extends Controller
 
     public function updateLead(Request $request, $id)
     {
+        $accessToken = "iwnyrX7KxxpmvHDMaJcy60_I7z0TD3J9D2S6jOvxrFbBcQ4E";
+        $leadData = DB::table('leads')->where('id', $id)->first();
         $updateField = [];
         if ($request->has('name')) {
             $nameParts = explode(' ', $request->name);
             $updateField['firstname'] = $nameParts[0];
             $updateField['lastname'] = $nameParts[1];
-            $leadData = DB::table('leads')->where('id', $id)->first();
 
-            $accessToken = "iwnyrX7KxxpmvHDMaJcy60_I7z0TD3J9D2S6jOvxrFbBcQ4E";
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.lexoffice.io/v1/contacts/' . $leadData->resuorceid,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Bearer ' . $accessToken,
+                    'Accept: application/json'
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $responseArray = json_decode($response, true);
+            $resuorceVersion = $responseArray['version'];
+            curl_close($curl);
+
+            // update
+            if (!$responseArray['person']) {
+                $data = array(
+                    'version' => $resuorceVersion,
+                    'roles' => array(
+                        'customer' => array('number' => $leadData->customer_number)
+                    ),
+                    'company' => array(
+                        'contactPersons' => array(
+                            "salutation" => "",
+                            'firstName' => $nameParts[0],
+                            'lastName' => $nameParts[1],
+                        ),
+                    ),
+                    'note' => 'Notiz2en'
+                );
+            } else {
+                $data = array(
+                    'version' => $resuorceVersion,
+                    'roles' => array(
+                        'customer' => array('number' => $leadData->customer_number)
+                    ),
+                    'person' => array(
+                        "salutation" => "",
+                        'firstName' => $nameParts[0],
+                        'lastName' => $nameParts[1],
+                    ),
+                    'note' => 'Notiz2en'
+                );
+            }
+            // dd(json_encode($data));
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://api.lexoffice.io/v1/contacts/' . $leadData->resuorceid);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Authorization: Bearer ' . $accessToken,
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ));
+
+            $response_2 = curl_exec($ch);
+            curl_close($ch);
+            DB::table('log_history')->insert([
+                'lead_id' => $id,
+                'description' => 'Kontaktname in Lexoffice auf „' . $nameParts[0] . ' ' . $nameParts[1] . '“ aktualisiert',
+                'by_user_id' => Auth::user()->id,
+            ]);
+        }
+        if ($request->has('email')) {
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => 'https://api.lexoffice.io/v1/contacts/' . $leadData->resuorceid,
@@ -84,10 +158,10 @@ class LeadsController extends Controller
                 'roles' => array(
                     'customer' => array('number' => $leadData->customer_number)
                 ),
-                'person' => array(
-                    "salutation" => "",
-                    'firstName' => $nameParts[0],
-                    'lastName' => $nameParts[1],
+                'emailAddresses' => array(
+                    "private" => array(
+                        $request->input('email')
+                    ),
                 ),
                 'note' => 'Notiz2en'
             );
@@ -107,13 +181,6 @@ class LeadsController extends Controller
 
             $response_2 = curl_exec($ch);
             curl_close($ch);
-            DB::table('log_history')->insert([
-                'lead_id' => $id,
-                'description' => 'Kontaktname in Lexoffice auf „' . $nameParts[0] . ' ' . $nameParts[1] . '“ aktualisiert',
-                'by_user_id' => Auth::user()->id,
-            ]);
-        }
-        if ($request->has('email')) {
             $updateField['email'] = $request->input('email');
             DB::table('log_history')->insert([
                 'lead_id' => $id,
@@ -122,12 +189,111 @@ class LeadsController extends Controller
             ]);
         }
         if ($request->has('phone')) {
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.lexoffice.io/v1/contacts/' . $leadData->resuorceid,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Bearer ' . $accessToken,
+                    'Accept: application/json'
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $responseArray = json_decode($response, true);
+            $resuorceVersion = $responseArray['version'];
+            curl_close($curl);
+
+            // update
+            $data = array(
+                'version' => $resuorceVersion,
+                'roles' => array(
+                    'customer' => array('number' => $leadData->customer_number)
+                ),
+                'phoneNumbers' => array(
+                    "private" => array(
+                        $request->input('phone')
+                    ),
+                ),
+                'note' => 'Notiz2en'
+            );
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://api.lexoffice.io/v1/contacts/' . $leadData->resuorceid);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Authorization: Bearer ' . $accessToken,
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ));
+
+            $response_2 = curl_exec($ch);
+            curl_close($ch);
             $updateField['phone'] = $request->input('phone');
             DB::table('log_history')->insert([
                 'lead_id' => $id,
                 'description' => 'Telefonnummer aktualisiert auf ' . $request->input('phone'),
                 'by_user_id' => Auth::user()->id,
             ]);
+        }
+        if ($request->has('company_name')) {
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.lexoffice.io/v1/contacts/' . $leadData->resuorceid,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Bearer ' . $accessToken,
+                    'Accept: application/json'
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $responseArray = json_decode($response, true);
+            $resuorceVersion = $responseArray['version'];
+            curl_close($curl);
+
+            // update
+            $data = array(
+                'version' => $resuorceVersion,
+                'roles' => array(
+                    'customer' => array('number' => $leadData->customer_number)
+                ),
+                'company' => array(
+                    "name" => $request->input('company_name'),
+                ),
+                'note' => 'Notiz2en'
+            );
+            // dd(json_encode($data));
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://api.lexoffice.io/v1/contacts/' . $leadData->resuorceid);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Authorization: Bearer ' . $accessToken,
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ));
+
+            $response_2 = curl_exec($ch);
+            curl_close($ch);
         }
         if ($request->has('hinfahrt')) {
             $date = date('Y-m-d', strtotime($request->input('hinfahrt')));
@@ -156,16 +322,24 @@ class LeadsController extends Controller
                 'by_user_id' => Auth::user()->id,
             ]);
         }
-        if ($request->has('hinfahrt_other_stops')) {
-            $updateField['hinfahrt_other_stops'] = $request->input('hinfahrt_other_stops');
+        if ($request->has('menu_732')) {
+            $updateField['menu_732'] = $request->input('menu_732');
         }
-        if ($request->has('rueckfahrtt_other_stops')) {
-            $updateField['rueckfahrtt_other_stops'] = $request->input('rueckfahrtt_other_stops');
+        if ($request->has('menu_731')) {
+            $updateField['menu_731'] = $request->input('menu_731');
         }
-        $update = DB::table('leads')->where('id', $id)->update($updateField);
-        if ($update) {
-            $lead = DB::table('leads')->where('id', $id)->first();
+        if ($request->has('ziel')) {
+            $updateField['ziel'] = $request->input('ziel');
         }
+        if ($request->has('start')) {
+            $updateField['start'] = $request->input('start');
+        }
+        if ($updateField) {
+            $update = DB::table('leads')->where('id', $id)->update($updateField);
+        }
+        // if ($update) {
+        //     $lead = DB::table('leads')->where('id', $id)->first();
+        // }
         return redirect()->back()->with('success', 'Lead updated');
     }
 
@@ -212,6 +386,7 @@ class LeadsController extends Controller
         DB::table('log_history')->insert([
             'lead_id' => $id,
             'description' => $name,
+            'file' => 1,
             'by_user_id' => Auth::user()->id,
         ]);
         return redirect()->back()->with('success', 'Image Uploaded');
@@ -225,6 +400,8 @@ class LeadsController extends Controller
             'last_name' => 'required',
             'email' => 'required',
             'label' => 'required',
+            'departure_point' => 'required',
+            'arrival_point' => 'required'
         ]);
         $accessToken = "iwnyrX7KxxpmvHDMaJcy60_I7z0TD3J9D2S6jOvxrFbBcQ4E";
         $data = array(
@@ -331,7 +508,8 @@ class LeadsController extends Controller
                 'notizer' => @$request->notizen,
                 'resuorceid' => @$resuorceid,
                 'resourceuri' => @$resourceUri,
-                'start' => @$request->street.' '.@$request->zip_code.' '.@$request->city,
+                'start' => @$request->street . ' ' . @$request->zip_code . ' ' . @$request->city,
+                'ziel' => $request->arrival_point,
             ]);
             return redirect()->back()->with('success', 'Lead Added');
         }

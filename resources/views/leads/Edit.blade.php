@@ -30,6 +30,7 @@
         if (isset($data['content']) && !empty($data['content'])) {
             $content_1 = $data['content'][0];
             $billingAddress = @$content_1['addresses']['billing'][0];
+            $company_name = @$content_1['company']['name'];
             if ($billingAddress) {
                 $combinedAddress = implode(', ', array_filter($billingAddress));
             }
@@ -58,7 +59,9 @@
                 <div class="d-flex justify-content-between">
                     <div class="d-flex">
                         <h4 class="mb-4 me-3"><span class="fw-bolder">VNR</span>: {{ $leads->vnr }}</h4>
-                        <h4 class="mb-4"><span class="fw-bolder">Kunden-Nr</span>: {{ $leads->customer_number }}</h4>
+                        <h4 class="mb-4 me-3"><span class="fw-bolder">Kunden-Nr</span>: {{ $leads->customer_number }}</h4>
+                        <h4 class="mb-4"><span class="fw-bolder">Company</span>: <span style="cursor: pointer;"
+                            onclick="edit('{{ $company_name }}','company_name','Company Name')">{{ $company_name }}</span></h4>
                     </div>
                     <a href="{{ url('/Transfer-To-Deal') }}/{{ $leads->id }}" class="btn-success mb-4">In Deal
                         umwandeln</a>
@@ -135,14 +138,14 @@
                     </div>
                     <div class="col-md-2">
                         <h5 class="mb-3">KONTAKT</h5>
-                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                        <div class="mb-3 d-flex justify-content-between align-items-center" style="margin-top: 27px;">
                             <div class="d-flex">
                                 <i class="ti ti-user-circle me-3"></i>
                                 <p class="fw-bolder" style="cursor: pointer;"
                                     onclick="edit('{{ $leads->firstname }} {{ $leads->lastname }}','name','Kontakt')">
                                     {{ $leads->firstname }} {{ $leads->lastname }}</p>
                             </div>
-                            <i class="ti ti-pencil"></i>
+                            <i class="ti ti-pencil" style="margin-bottom: 18px;"></i>
                         </div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
                             <div class="d-flex">
@@ -150,7 +153,7 @@
                                 <p style="cursor: pointer;" onclick="edit('{{ $leads->email }}','email','E-mail')">
                                     {{ $leads->email }}</p>
                             </div>
-                            <i class="ti ti-pencil"></i>
+                            <i class="ti ti-pencil" style="margin-bottom: 18px;"></i>
                         </div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
                             <div class="d-flex">
@@ -158,12 +161,12 @@
                                 <p style="cursor: pointer;" onclick="edit('{{ $leads->phone }}','phone','Phone')">
                                     {{ $leads->phone }}</p>
                             </div>
-                            <i class="ti ti-pencil"></i>
+                            <i class="ti ti-pencil" style="margin-bottom: 18px;"></i>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <h5 class="mb-3">UNTERNEHMEN</h5>
-                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                        <div class="mb-3 d-flex justify-content-between align-items-center" style="margin-top: 30px;">
                             <div class="d-flex">
                                 <i class="ti ti-building me-3"></i>
                                 <p class=""> </p>
@@ -180,18 +183,25 @@
                         <div class="mb-3">
                             <h5 class="mb-5">FAHRTDETAILS</h5>
                             <p class="mb-3"><u>Hin und Rückfahrt</u></p>
-                            <p class="mb-0">Hinfahrt <span style="cursor: pointer;"
+                            <p class="mb-0">Hinfahrt
+                                <span style="cursor: pointer;"
+                                    onclick="edit('{{ $leads->menu_731 }}','menu_731','Time of departure')">{{ date('H:i', strtotime($leads->menu_731)) }}<i
+                                        class="ti ti-pencil ms-2 me-2"></i></span>
+                                <span style="cursor: pointer;"
                                     onclick="edit('{{ $leads->hinfahrt }}','hinfahrt','Hinfahrt')">{{ date('d.m.Y', strtotime($leads->hinfahrt)) }}<i
                                         class="ti ti-pencil ms-2 me-2"></i></span><span style="cursor: pointer;"
-                                    onclick="edit('{{ $leads->hinfahrt_other_stops }}','hinfahrt_other_stops','Address')">{{ $leads->hinfahrt_other_stops }}
+                                    onclick="edit('{{ $leads->start }}','start','Address')">{{ $leads->start }}
                                     <i class="ti ti-pencil ms-2"></i></span>
                             </p>
                             <p class="mb-0">Rückfahrt
                                 <span style="cursor: pointer;"
+                                    onclick="edit('{{ $leads->menu_732 }}','menu_732','Time of return trip')">{{ date('H:i', strtotime($leads->menu_732)) }}<i
+                                        class="ti ti-pencil ms-2"></i></span>
+                                <span style="cursor: pointer;"
                                     onclick="edit('{{ $leads->rueckfahrtt }}','rueckfahrtt','Rückfahrt')">{{ date('d.m.Y', strtotime($leads->rueckfahrtt)) }}<i
                                         class="ti ti-pencil ms-2"></i></span><span style="cursor: pointer;"
-                                    onclick="edit('{{ $leads->rueckfahrtt_other_stops }}','rueckfahrtt_other_stops','Address')">
-                                    {{ $leads->rueckfahrtt_other_stops }}
+                                    onclick="edit('{{ $leads->ziel }}','ziel','Address')">
+                                    {{ $leads->ziel }}
                                     <i class="ti ti-pencil ms-2"></i></span>
                             </p>
                             <p class="mb-0" style="cursor: pointer;"
@@ -213,7 +223,7 @@
                                 onclick="edit('{{ $leads->notizer }}','notizer','Notizer')">{{ $leads->notizer }}</p>
                         </div>
                     </div>
-                    <div class="col-md-6" style=" margin-top: -100px;">
+                    <div class="col-md-6" style="margin-top: -60px;">
                         <h4 class="card-title">VERLAUF</h4>
                         <div class="card">
                             <div class="card-body bg-light" style="max-height: 300px; overflow-y: auto;">
@@ -229,17 +239,17 @@
                                                 autocomplete="off" value="notizen">
                                             <label class="btn px-1 font-small" for="option2">Notizen</label>
                                         </div>
-                                        <div class="me-1">
+                                        {{-- <div class="me-1">
                                             <input type="radio" class="btn-check" name="options" id="option3"
                                                 autocomplete="off" value="aktivitation">
                                             <label class="btn px-1 font-small" for="option3">Aktivitation</label>
-                                        </div>
-                                        <div class="me-1">
+                                        </div> --}}
+                                        {{-- <div class="me-1">
                                             <input type="radio" class="btn-check" name="options" id="option4"
                                                 autocomplete="off" value="email">
                                             <label class="btn px-1 font-small" for="option4"
                                                 style="white-space: nowrap;">E-mail</label>
-                                        </div>
+                                        </div> --}}
                                         <div class="me-1">
                                             <input type="radio" class="btn-check" name="options" id="option5"
                                                 autocomplete="off" value="dateien">
@@ -319,7 +329,20 @@
                                                         <p class="text-muted fs-2">
                                                             {{ date('d. M H:i', strtotime($row->created_at)) }} -
                                                             {{ $user->name }} {{ $user->last_name }}</p>
-                                                        <h6 class="fs-4">{{ $row->description }}</h6>
+                                                        @php
+                                                            $fileExtension = pathinfo(
+                                                                $row->description,
+                                                                PATHINFO_EXTENSION,
+                                                            );
+                                                        @endphp
+                                                        @if (!empty($fileExtension))
+                                                            <h6 class="fs-4"><a
+                                                                    style="text-decoration: none; color: black;"
+                                                                    href="{{ asset('public') }}/uploads/{{ $row->description }}"
+                                                                    download>{{ $row->description }}</a></h6>
+                                                        @else
+                                                            <h6 class="fs-4">{{ $row->description }}</h6>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </li>
@@ -350,7 +373,7 @@
                                             </li>
                                         @endif
                                     @endforeach
-                                    @foreach ($aktivitaten as $row)
+                                    {{-- @foreach ($aktivitaten as $row)
                                         @php
                                             $user = DB::table('users')
                                                 ->where('id', @$row->by_user_id)
@@ -374,8 +397,8 @@
                                                 </div>
                                             </li>
                                         @endif
-                                    @endforeach
-                                    @foreach ($email as $row)
+                                    @endforeach --}}
+                                    {{-- @foreach ($email as $row)
                                         @php
                                             $user = DB::table('users')
                                                 ->where('id', @$row->by_user_id)
@@ -399,7 +422,7 @@
                                                 </div>
                                             </li>
                                         @endif
-                                    @endforeach
+                                    @endforeach --}}
                                     <li
                                         class="timeline-item d-flex position-relative overflow-hidden d-none history dateien">
                                         <div class="timeline-badge-wrap d-flex flex-column align-items-center">
@@ -444,8 +467,10 @@
                                             </li>
                                         @endif
                                     @endforeach
-
-                                    @foreach ($values as $row)
+                                            @php
+                                                $all_leads = DB::table('leads')->where('is_deleted',0)->orderBy('id','desc')->get();
+                                            @endphp
+                                    @foreach ($all_leads as $row)
                                         @php
                                             // dd($row);
                                         @endphp
@@ -458,7 +483,7 @@
                                             </div>
                                             <div class="card ms-3">
                                                 <div class="card-body p-3 px-3">
-                                                    <h6 class="fs-4">{{ $row['name'] }}</h6>
+                                                    <h6 class="fs-4"><a href="{{ url('/Leads/edit/') }}/{{ $row->id }}" style="text-decoration: none; color: black;">{{ $row->vnr }}</a></h6>
                                                 </div>
                                             </div>
                                         </li>
@@ -541,6 +566,9 @@
                     todayHighlight: true,
                     // startDate: new Date()
                 })
+            } else if (fieldName == "menu_732" || fieldName == "menu_731") {
+                $('#editField').attr('type', 'time');
+                $('#editField').val(value);
             } else {
                 $('#editField').val(value);
             }

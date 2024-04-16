@@ -219,11 +219,30 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="col-lg-4 col-12 ">
+                            <div class="mb-4">
+                                <label for="" class="form-label">Departure point</label>
+                                <input size="40" class="form-control" aria-required="true" aria-invalid="false" placeholder="e.g. Mohrenstraße 17, 10117 Berlin" value="" type="text" name="departure_point">
+                                @error('departure_point')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-12 ">
+                            <div class="mb-4">
+                                <label for="" class="form-label">Arrival point</label>
+                                <input size="40" class="form-control" aria-required="true" aria-invalid="false" placeholder="e.g. Am Wall 135, 28195 Bremen" value="" type="text" name="arrival_point">
+                                @error('arrival_point')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="row mb-4">
                             <h4 class="mb-3">Address</h4>
                             <div class="col-md-3">
                                 <label for="" class="form-label">Supplement</label>
-                                <input type="text" name="supplement" class="form-control" value="{{ old('supplement') }}" placeholder="Additional address information">
+                                <input type="text" name="supplement" class="form-control"
+                                    value="{{ old('supplement') }}" placeholder="Additional address information">
                             </div>
                             <div class="col-md-3">
                                 <label for="" class="form-label">Street</label>
@@ -231,15 +250,29 @@
                             </div>
                             <div class="col-md-2">
                                 <label for="" class="form-label">Zip Code</label>
-                                <input type="number" name="zip_code" class="form-control" value="{{ old('zip_code') }}">
+                                <input type="number" name="zip_code" class="form-control"
+                                    value="{{ old('zip_code') }}">
                             </div>
                             <div class="col-md-2">
                                 <label for="" class="form-label">Country</label>
                                 <input type="text" name="country" class="form-control" value="{{ old('country') }}">
                             </div>
+                            @php
+                                $countryCodes = [
+                                    'DE' => 'Germany',
+                                    'US' => 'United States',
+                                    'FR' => 'France',
+                                ];
+                            @endphp
                             <div class="col-md-1">
                                 <label for="" class="form-label">Country Code</label>
-                                <input type="text" name="country_code" class="form-control" value="{{ old('country_code') }}">
+                                <select class="form-control" name="country_code" id="country_code">
+                                    @foreach ($countryCodes as $key => $row)
+                                        <option value="{{ $key }}" {{ $key == 'de' ? 'selected' : '' }}>
+                                            {{ $key }}</option>
+                                    @endforeach
+                                </select>
+
                             </div>
 
                         </div>
@@ -412,10 +445,10 @@
                 $('.add-user-card').addClass('d-none');
             }
         })
-        $(document).on('change','#label_field', function(){
+        $(document).on('change', '#label_field', function() {
             var value = $('#label_field option:selected').val();
-            console.log(value);
-            if(value == "Firma"){
+            // console.log(value);
+            if (value == "Firma" || value == "Schule" || value == "Verein") {
                 $('.firma').removeClass('d-none');
             } else {
                 $('.firma').addClass('d-none');
