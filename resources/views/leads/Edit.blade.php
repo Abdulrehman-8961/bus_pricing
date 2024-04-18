@@ -31,6 +31,12 @@
             $content_1 = $data['content'][0];
             $billingAddress = @$content_1['addresses']['billing'][0];
             $company_name = @$content_1['company']['name'];
+            $emailAddress = @$content_1['emailAddresses']['private'][0];
+            $lex_phone = @$content_1['phoneNumbers']['private'][0];
+            if ($lex_phone == "") {
+                # code...
+                $lex_phone = @$content_1['phoneNumbers']['business'][0];
+            }
             if ($billingAddress) {
                 $combinedAddress = implode(', ', array_filter($billingAddress));
             }
@@ -144,24 +150,24 @@
                             <div class="d-flex">
                                 <i class="ti ti-user-circle me-3"></i>
                                 <p class="fw-bolder" style="cursor: pointer;"
-                                    onclick="edit('{{ $leads->firstname }} {{ $leads->lastname }}','name','Kontakt')">
-                                    {{ $leads->firstname }} {{ $leads->lastname }}</p>
+                                    onclick="edit('{{ @$firstName }} {{ @$lastName }}','name','Kontakt')">
+                                    {{ @$firstName }} {{ @$lastName }}</p>
                             </div>
                             <i class="ti ti-pencil" style="margin-bottom: 18px;"></i>
                         </div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
                             <div class="d-flex">
                                 <i class="ti ti-mail me-3"></i>
-                                <p style="cursor: pointer;" onclick="edit('{{ $leads->email }}','email','E-mail')">
-                                    {{ $leads->email }}</p>
+                                <p style="cursor: pointer;" onclick="edit('{{ @$emailAddress }}','email','E-mail')">
+                                    {{ @$emailAddress }}</p>
                             </div>
                             <i class="ti ti-pencil" style="margin-bottom: 18px;"></i>
                         </div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
                             <div class="d-flex">
                                 <i class="ti ti-phone me-3"></i>
-                                <p style="cursor: pointer;" onclick="edit('{{ $leads->phone }}','phone','Phone')">
-                                    {{ $leads->phone }}</p>
+                                <p style="cursor: pointer;" onclick="edit('{{ isset($lex_phone) ? $lex_phone : $leads->phone  }}','phone','Phone')">
+                                    {{ isset($lex_phone) ? $lex_phone : $leads->phone }}</p>
                             </div>
                             <i class="ti ti-pencil" style="margin-bottom: 18px;"></i>
                         </div>
@@ -172,13 +178,17 @@
                             <div class="d-flex">
                                 <i class="ti ti-building me-3"></i>
                                 <p class="" style="cursor: pointer;"
-                                @if(@$company_name) onclick="edit('{{ $company_name }}','company_name','Company Name')" @endif> {{ $company_name ? $company_name : 'Firmenname nicht vorhanden' }} </p>
+                                    @if (@$company_name) onclick="edit('{{ @$company_name }}','company_name','Company Name')" @endif>
+                                    {{ @$company_name ? @$company_name : 'Firmenname nicht vorhanden' }} </p>
                             </div>
                         </div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
                             <div class="d-flex">
                                 <p>Adresse: </p>
-                                <p>{{ $combinedAddress ? $combinedAddress : 'Adresse nicht vorhanden' }}</p>
+                                <p @if(isset($billingAddress)) style="cursor: pointer;"
+                                    onclick="updateAddress('{{ @$billingAddress['street'] }}','{{ @$billingAddress['city'] }}','{{ @$billingAddress['zip'] }}','{{ @$billingAddress['countryCode'] }}')" @endif>
+                                    {{ isset($billingAddress) ? @$billingAddress['street'] . ' ' . @$billingAddress['city'] . ' ' . @$billingAddress['zip'] . ' ' . @$billingAddress['countryCode'] : 'Adresse nicht vorhanden' }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -470,9 +480,12 @@
                                             </li>
                                         @endif
                                     @endforeach
-                                            @php
-                                                $all_leads = DB::table('leads')->where('is_deleted',0)->orderBy('id','desc')->get();
-                                            @endphp
+                                    @php
+                                        $all_leads = DB::table('leads')
+                                            ->where('is_deleted', 0)
+                                            ->orderBy('id', 'desc')
+                                            ->get();
+                                    @endphp
                                     @foreach ($all_leads as $row)
                                         @php
                                             // dd($row);
@@ -486,7 +499,10 @@
                                             </div>
                                             <div class="card ms-3">
                                                 <div class="card-body p-3 px-3">
-                                                    <h6 class="fs-4"><a href="{{ url('/Leads/edit/') }}/{{ $row->id }}" style="text-decoration: none; color: black;">{{ $row->vnr }}</a></h6>
+                                                    <h6 class="fs-4"><a
+                                                            href="{{ url('/Leads/edit/') }}/{{ $row->id }}"
+                                                            style="text-decoration: none; color: black;">{{ $row->vnr }}</a>
+                                                    </h6>
                                                 </div>
                                             </div>
                                         </li>
@@ -554,6 +570,63 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+    @php
+        $countryCodes = [
+            'DE' => 'Germany',
+            'US' => 'United States',
+            'FR' => 'France',
+        ];
+    @endphp
+    <div class="modal fade" id="editAddress" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action="{{ url('Leads/address/update') }}/{{ $leads->id }}" method="post">
+                    @csrf
+                    <div class="modal-header d-flex align-items-center">
+                        <h4 class="modal-title">
+                            Address
+                        </h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <label for="">Straße </label>
+                                <input type="text" id="street" name="street" class="form-control">
+                            </div>
+                            <div class="col-3">
+                                <label for="">PLZ</label>
+                                <input type="text" id="zip_code" name="zip_code" class="form-control">
+                            </div>
+                            <div class="col-3">
+                                <label for="">Land</label>
+                                <input type="text" id="country" name="country" class="form-control">
+                            </div>
+                            <div class="col-3">
+                                <label for="">Ländercode</label>
+                                <select class="form-control" name="country_code" id="country_code">
+                                    @foreach ($countryCodes as $key => $row)
+                                        <option value="{{ $key }}">
+                                            {{ $key }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-bs-dismiss="modal">
+                            Abbrechen
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            Speichern
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     <!-- /.modal -->
 @endsection
 
@@ -576,6 +649,14 @@
                 $('#editField').val(value);
             }
             $('#editmodal').modal('show');
+        }
+
+        function updateAddress(street, city, zip, countryCode) {
+            $('#street').val(street);
+            $('#zip_code').val(zip);
+            $('#country').val(city);
+            $('#country_code').val(countryCode);
+            $('#editAddress').modal('show');
         }
         // jQuery(".datepicker-autoclose").datepicker({
         //     autoclose: true,

@@ -82,10 +82,12 @@ Route::post('/Link/save', [App\Http\Controllers\HomeController::class, 'settingS
 
 
 Route::get('/Leads', [LeadsController::class, 'view'])->middleware('isAdminDispatcher');
+Route::get('/getLeads', [LeadsController::class, 'leads'])->middleware('isAdminDispatcher');
 Route::get('/Coron-Leads', [CoronController::class, 'getLeads']);
 Route::post('/Lead/save', [LeadsController::class, 'save'])->middleware('isAdmin');
 Route::get('/Leads/edit/{id}', [LeadsController::class, 'edit'])->middleware('isAdmin');
 Route::post('/Leads/update/{id}', [LeadsController::class, 'updateLead'])->middleware('isAdmin');
+Route::post('/Leads/address/update/{id}', [LeadsController::class, 'updateLeadAddress'])->middleware('isAdmin');
 Route::post('/update-Employee/{id}', [LeadsController::class, 'updateEmployee'])->middleware('isAdmin');
 Route::post('/update-label/{id}', [LeadsController::class, 'updateLabel'])->middleware('isAdmin');
 Route::post('/update-quelle/{id}', [LeadsController::class, 'updateQuelle'])->middleware('isAdmin');
