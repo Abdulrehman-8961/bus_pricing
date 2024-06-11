@@ -44,7 +44,8 @@ class LeadsController extends Controller
     public function leads(Request $request)
     {
         $search = @$request->input('search');
-        $leads = DB::table('leads')->where('is_deleted', 0)
+        $archive = @$request->input('archive');
+        $leads = DB::table('leads')->where('is_deleted', 0)->where('in_deal', 0)->where('is_archive', $archive)
             ->where(function ($query) use ($search) {
                 if (!empty($search)) {
                     $query->where('vnr', 'LIKE', '%' . $search . '%')
@@ -59,7 +60,6 @@ class LeadsController extends Controller
             })
             ->orderBy('id', 'desc')
             ->paginate(20);
-
         return response()->json(view("leads.component.table", compact("leads", "search"))->render());
     }
 
@@ -432,7 +432,6 @@ class LeadsController extends Controller
 
             $response_2 = curl_exec($ch);
             curl_close($ch);
-
         }
         return redirect()->back()->with('success', 'Lead updated');
     }
@@ -453,10 +452,26 @@ class LeadsController extends Controller
     }
     public function updateEmployee(Request $request, $id)
     {
+        dd($id);
         DB::table('leads')->where('id', $id)->update([
             'kundenbetreuer' => $request->employee
         ]);
         return redirect()->back()->with('success', 'Kundenbetreuer Updated');
+    }
+    public function updateEmployee_(Request $request)
+    {
+        $updateId = $request->updateId;
+        DB::table('leads')->where('id', $updateId)->update([
+            'kundenbetreuer' => $request->employee_id
+        ]);
+        return redirect()->back()->with('success', 'Kundenbetreuer Updated');
+    }
+    public function archive(Request $request, $id)
+    {
+        DB::table('leads')->where('id', $id)->update([
+            'is_archive' => 1
+        ]);
+        return redirect()->back()->with('success', 'Lead erfolgreich archiviert');
     }
     public function updateLabel(Request $request, $id)
     {
@@ -480,10 +495,10 @@ class LeadsController extends Controller
         DB::table('log_history')->insert([
             'lead_id' => $id,
             'description' => $name,
-            'file' => 1,
+            // 'file' => 1,
             'by_user_id' => Auth::user()->id,
         ]);
-        return redirect()->back()->with('success', 'Image Uploaded');
+        return redirect()->back()->with('success', 'File Uploaded');
     }
 
     public function save(Request $request)
@@ -671,4 +686,3 @@ class LeadsController extends Controller
         return redirect()->back()->with('error', 'Error!');
     }
 }
-

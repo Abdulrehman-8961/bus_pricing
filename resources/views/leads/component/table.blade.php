@@ -36,6 +36,7 @@
                 $user = DB::table('users')
                     ->where('id', $row->kundenbetreuer)
                     ->first();
+                $employee = DB::table('users')->where('role', 'Employee')->get();
             @endphp
             <tr>
                 <td>
@@ -77,15 +78,21 @@
                     </p>
                 </td>
                 <td>
-                    <p class="mb-0 fw-normal">{{ @$user->name }} {{ @$user->last_name }}</p>
+                    <select class="form-control employee" name="employee" id="employee" style="border: none; cursor: pointer;" data-id="{{ $row->id }}">
+                        <option value=""></option>
+                        @foreach ($employee as $e)
+                            <option value="{{ $e->id }}" {{ $row->kundenbetreuer == $e->id ? 'selected' : '' }}>
+                                {{ $e->name }} {{ $e->last_name }}
+                            </option>
+                        @endforeach
                 </td>
                 <td>
                     <p class="mb-0 fw-normal">{{ $row->customer_number }}</p>
                 </td>
                 <td>
                     <div class="dropdown dropstart">
-                        <a href="#" class="text-muted" id="dropdownMenuButton"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <a href="#" class="text-muted" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                            aria-expanded="false">
                             <i class="ti ti-dots-vertical fs-6"></i>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -94,13 +101,17 @@
                                     <a class="dropdown-item d-flex align-items-center gap-3"
                                         href="{{ url('/Leads/edit') }}/{{ $row->id }}">Bearbeiten</a>
                                 </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-3 delete"
+                                        data-id="{{ $row->id }}" href="javascript:void();">Löschen</a>
+                                </li>
                             @endif
                             <li>
-                                <a class="dropdown-item d-flex align-items-center gap-3 delete"
-                                    href="{{ url('/Leads/delete') }}/{{ $row->id }}">Löschen</a>
+                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ url('/Archive-Lead') }}/{{ $row->id }}">Archivieren
+                                </a>
                             </li>
                             <li>
-                                <a class="dropdown-item d-flex align-items-center gap-3 delete"
+                                <a class="dropdown-item d-flex align-items-center gap-3"
                                     href="{{ url('/Transfer-To-Deal') }}/{{ $row->id }}">In Deal
                                     umwandeln</a>
                             </li>

@@ -38,18 +38,19 @@
 
         <form class="container-fluid" method="GET" action="{{ url()->current() }}">
             <div class="row">
-                <div class="d-flex col-lg-6 col-md-6 col-12 mb-3 py-3 px-2">
+                <div class="d-flex col-lg-8 col-md-8 col-12 mb-3 py-3 px-2">
                     <button id="btn-add" type="button" class="btn btn-success me-3" style="white-space: nowrap;"><i
                             class="fa fa-plus"></i> lead</button>
-                    <div class="d-flex align-items-center bg-white px-3">
+                    <div class="d-flex align-items-center bg-white px-3 me-3">
                         <i class="ti ti-search fs-8 me-3"></i>
                         <input type="text" class="form-control me-1" style="border: none;" id="search-input"
                             placeholder="Suchen" name="search" value="{{ @$_GET['search'] }}">
                     </div>
+                    <input type="checkbox" class="btn-check btn-archive" id="btn-check-2-outlined" autocomplete="off">
+                    <label class="btn" for="btn-check-2-outlined" style="background-color: #0B996D; color: #fff;">Archive
+                        anzeigen</label><br>
                 </div>
                 <div class="d-flex col-lg-4 col-md-4 col-12">
-                </div>
-                <div class="col-lg-2 col-md-2 col-12 text-end">
                 </div>
             </div>
         </form>
@@ -66,9 +67,9 @@
                                 <label for="" class="form-label">Kundenbetreuer</label>
                                 <select class="form-control" name="kundenbetreuer" id="">
                                     <option value="">Select Value</option>
-                                    @foreach ($employee as $row)
-                                        <option value="{{ $row->id }}">
-                                            {{ $row->name }} {{ $row->last_name }}
+                                    @foreach ($employee as $e)
+                                        <option value="{{ $e->id }}">
+                                            {{ $e->name }} {{ $e->last_name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -274,7 +275,7 @@
                             <div class="col-md-1">
                                 <label for="" class="form-label">Ländercode</label>
                                 <select class="form-control" name="country_code" id="country_code">
-                                    @foreach ($countryCodes as $key => $row)
+                                    @foreach ($countryCodes as $key => $cc)
                                         <option value="{{ $key }}" {{ $key == 'de' ? 'selected' : '' }}>
                                             {{ $key }}</option>
                                     @endforeach
@@ -292,7 +293,7 @@
                 </form>
             </div>
         </div>
-
+        {{-- {{ dd($row) }} --}}
 
         <div class="card w-100 position-relative overflow-hidden">
             {{-- <div class="px-4 py-3 border-bottom d-flex justify-content-between">
@@ -325,10 +326,22 @@
             </div>
         </div>
     </div>
+    <form action="{{ url('update-Employee_') }}" id="update_employee" method="POST">
+        @csrf
+        <input type="hidden" value="" name="updateId" id="updateId">
+        <input type="hidden" value="" name="employee_id" id="employee_id">
+    </form>
 @endsection
 @section('javascript')
     <script>
         $(document).ready(function() {
+            $(document).on('change', '.employee', function() {
+                var employee_id = $(this).val();
+                var updateId = $(this).data('id');
+                $('#updateId').val(updateId);
+                $('#employee_id').val(employee_id);
+                $('#update_employee').submit();
+            })
             $(document).on('click', '#btn-add', function() {
                 if ($('.add-user-card').hasClass('d-none')) {
                     $('.add-user-card').removeClass('d-none');
@@ -345,32 +358,75 @@
                     $('.firma').addClass('d-none');
                 }
             })
+            $('.btn-archive').on('click', function() {
+                if($('.btn-archive').prop('checked')){
+                    var archive = 1;
+                    } else {
+                    var archive = 0;
+                }
+                var search = $('#search-input').val();
+                leadsView(1, search, archive);
+            });
             $('#search-input').on('keyup', function() {
                 var search = $(this).val();
-                leadsView(1,search);
+                if($('.btn-archive').prop('checked')){
+                    var archive = 1;
+                    } else {
+                    var archive = 0;
+                }
+                leadsView(1, search, archive);
             });
             $(document).on('click', '.pagination a', function(e) {
-            e.preventDefault();
-            var page = $(this).attr('href').split('page=')[1]; // Get the page number
-            var search = $('#search-input').val();
-            leadsView(page, search); // Load data for the clicked page
-        });
+                e.preventDefault();
+                if($('.btn-archive').prop('checked')){
+                    var archive = 1;
+                    } else {
+                    var archive = 0;
+                }
+                var page = $(this).attr('href').split('page=')[1]; // Get the page number
+                var search = $('#search-input').val();
+                leadsView(page, search, archive); // Load data for the clicked page
+            });
 
         });
-        leadsView(1, '');
+        leadsView(1, '', 0);
 
-        function leadsView(page,search) {
+        function leadsView(page, search, archive) {
             $.ajax({
                 url: "{{ url('getLeads') }}",
                 method: "GET",
                 data: {
                     page: page,
-                    search: search
+                    search: search,
+                    archive: archive,
                 },
                 success: function(data) {
                     $('#leads-table').html(data);
                 }
             });
         }
+
+        $(document).on('click', '.delete', function() {
+            var deleteId = $(this).attr('data-id');
+            if (deleteId) {
+                Swal.fire({
+                    title: 'Bist du sicher?',
+                    text: 'Möchtest du diesen Lead wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ja, löschen!',
+                    cancelButtonText: 'Nein, behalten',
+                    customClass: {
+                        confirmButton: 'btn btn-danger text-light me-2',
+                        cancelButton: 'btn btn-secondary'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location = "{{ url('/Leads/delete') }}" + '/' + deleteId;
+                    }
+                });
+            }
+        })
     </script>
 @endsection

@@ -486,7 +486,7 @@
                                     @php
                                         $all_leads = DB::table('leads')
                                             ->where('is_deleted', 0)
-                                            ->orderBy('id', 'desc')
+                                            ->where('id', $leads->id)
                                             ->get();
                                     @endphp
                                     @foreach ($all_leads as $row)
@@ -517,9 +517,6 @@
                                             ->get();
                                     @endphp
                                     @foreach ($current_deals as $row)
-                                        @php
-
-                                        @endphp
                                         <li
                                             class="timeline-item d-flex position-relative overflow-hidden d-none history deals">
                                             <div class="timeline-badge-wrap d-flex flex-column align-items-center">

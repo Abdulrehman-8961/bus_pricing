@@ -17,6 +17,7 @@ class AdminOrDispatcher
     public function handle(Request $request, Closure $next)
     {
         if ($request->user()->role !== 'Admin' && $request->user()->role !== 'Dispatcher') {
+            
             abort(403, 'Unauthorized action.');
         }
 
