@@ -147,7 +147,8 @@
                     <div class="col-md-2">
                         <h5 class="mb-3">KONTAKT</h5>
                         <div class="mb-3 d-flex justify-content-between align-items-center" style="margin-top: 27px;">
-                            <div class="d-flex">
+                            <div class="d-flex" style="cursor: pointer;"
+                            onclick="edit('{{ @$firstName }} {{ @$lastName }}','name','Kontakt')">
                                 <i class="ti ti-user-circle me-3"></i>
                                 <p class="fw-bolder" style="cursor: pointer;"
                                     onclick="edit('{{ @$firstName }} {{ @$lastName }}','name','Kontakt')">
@@ -156,7 +157,7 @@
                             <i class="ti ti-pencil" style="margin-bottom: 18px;"></i>
                         </div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
+                            <div class="d-flex" style="cursor: pointer;" onclick="edit('{{ @$emailAddress }}','email','E-mail')">
                                 <i class="ti ti-mail me-3"></i>
                                 <p style="cursor: pointer;" onclick="edit('{{ @$emailAddress }}','email','E-mail')">
                                     {{ @$emailAddress }}</p>
@@ -164,7 +165,7 @@
                             <i class="ti ti-pencil" style="margin-bottom: 18px;"></i>
                         </div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
+                            <div class="d-flex" style="cursor: pointer;" onclick="edit('{{ isset($lex_phone) ? $lex_phone : $leads->phone  }}','phone','Phone')">
                                 <i class="ti ti-phone me-3"></i>
                                 <p style="cursor: pointer;" onclick="edit('{{ isset($lex_phone) ? $lex_phone : $leads->phone  }}','phone','Phone')">
                                     {{ isset($lex_phone) ? $lex_phone : $leads->phone }}</p>
@@ -175,18 +176,20 @@
                     <div class="col-md-2">
                         <h5 class="mb-3">UNTERNEHMEN</h5>
                         <div class="mb-3 d-flex justify-content-between align-items-center" style="margin-top: 30px;">
-                            <div class="d-flex">
+                            <div class="d-flex" style="cursor: pointer;"
+                            onclick="edit('{{ @$company_name }}','company_name','Company Name')" >
                                 <i class="ti ti-building me-3"></i>
                                 <p class="" style="cursor: pointer;"
-                                    @if (@$company_name) onclick="edit('{{ @$company_name }}','company_name','Company Name')" @endif>
+                                     onclick="edit('{{ @$company_name }}','company_name','Company Name')" >
                                     {{ @$company_name ? @$company_name : 'Firmenname nicht vorhanden' }} </p>
                             </div>
                         </div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
-                            <div class="d-flex">
+                            <div class="d-flex" @if(isset($billingAddress)) style="cursor: pointer;"
+                            onclick="updateAddress('{{ @$billingAddress['street'] }}','{{ @$billingAddress['city'] }}','{{ @$billingAddress['zip'] }}','{{ @$billingAddress['countryCode'] }}')" @endif>
                                 <p>Adresse: </p>
-                                <p @if(isset($billingAddress)) style="cursor: pointer;"
-                                    onclick="updateAddress('{{ @$billingAddress['street'] }}','{{ @$billingAddress['city'] }}','{{ @$billingAddress['zip'] }}','{{ @$billingAddress['countryCode'] }}')" @endif>
+                                <p style="cursor: pointer;"
+                                    onclick="updateAddress('{{ @$billingAddress['street'] }}','{{ @$billingAddress['city'] }}','{{ @$billingAddress['zip'] }}','{{ @$billingAddress['countryCode'] }}')">
                                     {{ isset($billingAddress) ? @$billingAddress['street'] . ' ' . @$billingAddress['city'] . ' ' . @$billingAddress['zip'] . ' ' . @$billingAddress['countryCode'] : 'Adresse nicht vorhanden' }}
                                 </p>
                             </div>
@@ -675,3 +678,4 @@
         });
     </script>
 @endsection
+

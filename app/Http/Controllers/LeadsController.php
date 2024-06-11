@@ -671,3 +671,4 @@ class LeadsController extends Controller
         return redirect()->back()->with('error', 'Error!');
     }
 }
+

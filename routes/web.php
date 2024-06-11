@@ -24,7 +24,7 @@ use App\Http\Controllers\DealController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/clear', function() { Artisan::call('cache:clear'); Artisan::call('config:cache'); Artisan::call('view:clear'); return "Cleared!"; });
 Route::get('/', function () {
     return redirect('/home');
 });
@@ -121,3 +121,4 @@ Route::get('/Deals/edit/{id}', [LeadsController::class, 'edit'])->middleware('is
 
 
 Route::get('exportcsv', [DealController::class, 'exportToCSV'])->middleware('isAdmin');
+
