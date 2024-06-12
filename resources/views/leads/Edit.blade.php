@@ -33,7 +33,7 @@
             $company_name = @$content_1['company']['name'];
             $emailAddress = @$content_1['emailAddresses']['private'][0];
             $lex_phone = @$content_1['phoneNumbers']['private'][0];
-            if ($lex_phone == "") {
+            if ($lex_phone == '') {
                 # code...
                 $lex_phone = @$content_1['phoneNumbers']['business'][0];
             }
@@ -148,7 +148,7 @@
                         <h5 class="mb-3">KONTAKT</h5>
                         <div class="mb-3 d-flex justify-content-between align-items-center" style="margin-top: 27px;">
                             <div class="d-flex" style="cursor: pointer;"
-                            onclick="edit('{{ @$firstName }} {{ @$lastName }}','name','Kontakt')">
+                                onclick="edit('{{ @$firstName }} {{ @$lastName }}','name','Kontakt')">
                                 <i class="ti ti-user-circle me-3"></i>
                                 <p class="fw-bolder" style="cursor: pointer;"
                                     onclick="edit('{{ @$firstName }} {{ @$lastName }}','name','Kontakt')">
@@ -157,7 +157,8 @@
                             <i class="ti ti-pencil" style="margin-bottom: 18px;"></i>
                         </div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
-                            <div class="d-flex" style="cursor: pointer;" onclick="edit('{{ @$emailAddress }}','email','E-mail')">
+                            <div class="d-flex" style="cursor: pointer;"
+                                onclick="edit('{{ @$emailAddress }}','email','E-mail')">
                                 <i class="ti ti-mail me-3"></i>
                                 <p style="cursor: pointer;" onclick="edit('{{ @$emailAddress }}','email','E-mail')">
                                     {{ @$emailAddress }}</p>
@@ -165,9 +166,11 @@
                             <i class="ti ti-pencil" style="margin-bottom: 18px;"></i>
                         </div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
-                            <div class="d-flex" style="cursor: pointer;" onclick="edit('{{ isset($lex_phone) ? $lex_phone : $leads->phone  }}','phone','Phone')">
+                            <div class="d-flex" style="cursor: pointer;"
+                                onclick="edit('{{ isset($lex_phone) ? $lex_phone : $leads->phone }}','phone','Phone')">
                                 <i class="ti ti-phone me-3"></i>
-                                <p style="cursor: pointer;" onclick="edit('{{ isset($lex_phone) ? $lex_phone : $leads->phone  }}','phone','Phone')">
+                                <p style="cursor: pointer;"
+                                    onclick="edit('{{ isset($lex_phone) ? $lex_phone : $leads->phone }}','phone','Phone')">
                                     {{ isset($lex_phone) ? $lex_phone : $leads->phone }}</p>
                             </div>
                             <i class="ti ti-pencil" style="margin-bottom: 18px;"></i>
@@ -177,15 +180,16 @@
                         <h5 class="mb-3">UNTERNEHMEN</h5>
                         <div class="mb-3 d-flex justify-content-between align-items-center" style="margin-top: 30px;">
                             <div class="d-flex" style="cursor: pointer;"
-                            onclick="edit('{{ @$company_name }}','company_name','Company Name')" >
+                                onclick="edit('{{ @$company_name }}','company_name','Company Name')">
                                 <i class="ti ti-building me-3"></i>
                                 <p class="" style="cursor: pointer;"
-                                     onclick="edit('{{ @$company_name }}','company_name','Company Name')" >
+                                    onclick="edit('{{ @$company_name }}','company_name','Company Name')">
                                     {{ @$company_name ? @$company_name : 'Firmenname nicht vorhanden' }} </p>
                             </div>
                         </div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
-                            <div class="d-flex" @if(isset($billingAddress)) style="cursor: pointer;"
+                            <div class="d-flex"
+                                @if (isset($billingAddress)) style="cursor: pointer;"
                             onclick="updateAddress('{{ @$billingAddress['street'] }}','{{ @$billingAddress['city'] }}','{{ @$billingAddress['zip'] }}','{{ @$billingAddress['countryCode'] }}')" @endif>
                                 <p>Adresse: </p>
                                 <p style="cursor: pointer;"
@@ -199,23 +203,23 @@
                         <div class="mb-3">
                             <h5 class="mb-5">FAHRTDETAILS</h5>
                             <p class="mb-3"><u>Hin und Rückfahrt</u></p>
-                            <p class="mb-0">Hinfahrt
+                            <p class="mb-3">Hinfahrt <br>
                                 <span style="cursor: pointer;"
                                     onclick="edit('{{ $leads->menu_731 }}','menu_731','Time of departure')">{{ date('H:i', strtotime($leads->menu_731)) }}<i
-                                        class="ti ti-pencil ms-2 me-2"></i></span>
+                                        class="ti ti-pencil ms-2 me-2"></i></span><br>
                                 <span style="cursor: pointer;"
                                     onclick="edit('{{ $leads->hinfahrt }}','hinfahrt','Hinfahrt')">{{ date('d.m.Y', strtotime($leads->hinfahrt)) }}<i
-                                        class="ti ti-pencil ms-2 me-2"></i></span><span style="cursor: pointer;"
+                                        class="ti ti-pencil ms-2 me-2"></i></span><br><span style="cursor: pointer;"
                                     onclick="edit('{{ $leads->start }}','start','Address')">{{ $leads->start }}
                                     <i class="ti ti-pencil ms-2"></i></span>
                             </p>
-                            <p class="mb-0">Rückfahrt
+                            <p class="mb-3">Rückfahrt <br>
                                 <span style="cursor: pointer;"
                                     onclick="edit('{{ $leads->menu_732 }}','menu_732','Time of return trip')">{{ date('H:i', strtotime($leads->menu_732)) }}<i
-                                        class="ti ti-pencil ms-2"></i></span>
+                                        class="ti ti-pencil ms-2"></i></span> <br>
                                 <span style="cursor: pointer;"
                                     onclick="edit('{{ $leads->rueckfahrtt }}','rueckfahrtt','Rückfahrt')">{{ date('d.m.Y', strtotime($leads->rueckfahrtt)) }}<i
-                                        class="ti ti-pencil ms-2"></i></span><span style="cursor: pointer;"
+                                        class="ti ti-pencil ms-2"></i></span><br><span style="cursor: pointer;"
                                     onclick="edit('{{ $leads->ziel }}','ziel','Address')">
                                     {{ $leads->ziel }}
                                     <i class="ti ti-pencil ms-2"></i></span>
@@ -352,10 +356,20 @@
                                                             );
                                                         @endphp
                                                         @if (!empty($fileExtension))
-                                                            <h6 class="fs-4"><a
-                                                                    style="text-decoration: none; color: black;"
+                                                            <h6 class="fs-4">
+                                                                @if ($fileExtension == 'png' || $fileExtension == 'jpeg' || $fileExtension == 'jpg')
+                                                                    <i class="ti ti-photo me-2"></i>
+                                                                @elseif($fileExtension == 'pdf')
+                                                                    <i class="ti ti-file-text me-2"></i>
+                                                                @elseif($fileExtension == 'xlsx' || $fileExtension == 'csv')
+                                                                    <i class="ti ti-file-analytics me-2"></i>
+                                                                @else
+                                                                    <i class="ti ti-file me-2"></i>
+                                                                @endif
+                                                                <a style="text-decoration: none; color: black;"
                                                                     href="{{ asset('public') }}/uploads/{{ $row->description }}"
-                                                                    download>{{ $row->description }}</a></h6>
+                                                                    download>{{ $row->description }}</a>
+                                                            </h6>
                                                         @else
                                                             <h6 class="fs-4">{{ $row->description }}</h6>
                                                         @endif
@@ -633,6 +647,12 @@
 @section('javascript')
     <script>
         function edit(value, fieldName, title) {
+            $('#editField').attr('type', 'text');
+            $('#editField').val('');
+            if ($('#editField').hasClass('datepicker-autoclose')) {
+                $('#editField').datepicker('destroy');
+            }
+            $('#editField').removeClass("datepicker-autoclose");
             $('.modal-title').html(title);
             $('#editField').attr("name", fieldName);
             if (fieldName == "hinfahrt" || fieldName == "rueckfahrtt") {
@@ -675,4 +695,3 @@
         });
     </script>
 @endsection
-

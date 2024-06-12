@@ -16,7 +16,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <!--  Favicon -->
-    <!--<link rel="shortcut icon" type="image/png" href="{{ asset('public') }}/dist/images/logos/favicon.ico" />-->
+    {{-- <link rel="shortcut icon" type="image/png" href="{{ asset('public') }}/dist/images/logos/favicon.ico" /> --}}
     <!-- Owl Carousel  -->
     <link rel="stylesheet" href="{{ asset('public') }}/dist/libs/owl.carousel/dist/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="{{ asset('public') }}/dist/libs/sweetalert2/dist/sweetalert2.min.css">
