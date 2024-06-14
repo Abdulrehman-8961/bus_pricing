@@ -26,6 +26,7 @@
         // echo $response;
 
         $data = json_decode($response, true);
+        // dd($data);
         $combinedAddress = '';
         if (isset($data['content']) && !empty($data['content'])) {
             $content_1 = $data['content'][0];
@@ -57,6 +58,54 @@
                     'customer_number' => $customer_number,
                 ];
             }
+        }
+
+        // get files
+
+        $curl_file = curl_init();
+
+        $contactId = @$data['content'][0]['id'];
+
+        curl_setopt_array($curl_file, [
+            CURLOPT_URL =>
+                'https://api.lexoffice.io/v1/voucherlist?voucherType=any&voucherStatus=any&contactId=' .
+                @$contactId,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer iwnyrX7KxxpmvHDMaJcy60_I7z0TD3J9D2S6jOvxrFbBcQ4E',
+                'Accept: application/json',
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        $response_file = curl_exec($curl_file);
+
+        curl_close($curl_file);
+        // echo $response;
+
+        $data_file = json_decode($response_file, true);
+        // dd($data_file);
+
+        if (!empty($data_file['content'])) {
+            $voucherID = $data_file['content'][0]['id'];
+            $voucherType = $data_file['content'][0]['voucherType'];
+            $voucherStatus = $data_file['content'][0]['voucherStatus'];
+            $voucherNumber = $data_file['content'][0]['voucherNumber'];
+            $totalAmount = $data_file['content'][0]['totalAmount'];
+            $createdDate = $data_file['content'][0]['createdDate'];
+        } else {
+            $voucherID = 0;
+            $voucherType = '';
+            $voucherStatus = '';
+            $voucherNumber = '';
+            $totalAmount = '';
+            $createdDate = '';
         }
     @endphp
     <div class="container-fluid mw-100">
@@ -378,6 +427,32 @@
                                             </li>
                                         @endif
                                     @endforeach
+                                    @if (!empty($data_file['content']) && $data_file['content'] > 0)
+                                        @foreach ($data_file['content'] as $da)
+                                            <li
+                                                class="timeline-item d-flex position-relative overflow-hidden history all">
+                                                <div class="timeline-badge-wrap d-flex flex-column align-items-center">
+                                                    <span
+                                                        class="timeline-badge border-2 border border-primary flex-shrink-0 my-8"></span>
+                                                    <span class="timeline-badge-border d-block flex-shrink-0"></span>
+                                                </div>
+                                                <div class="card ms-3 w-100" style="cursor: pointer;"
+                                                    onclick="downloadFile('{{ $da['id'] }}','{{ $da['voucherType'] }}')">
+                                                    <div class="card-body p-3 px-3">
+                                                        <p class="text-muted fs-2">
+                                                            {{ date('d. M H:i', strtotime($da['createdDate'])) }} -
+                                                            {{ $da['voucherType'] }} - {{ $da['voucherStatus'] }}</p>
+                                                        <div class="d-flex justify-content-between">
+                                                            <h6 class="fs-4">{{ $da['voucherNumber'] }}</h6>
+                                                            <h6 class="fs-4">
+                                                                {{ number_format((float) $da['totalAmount'], 2, ',', '') }}
+                                                                €</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    @endif
                                     @foreach ($notizen as $row)
                                         @php
                                             $user = DB::table('users')
@@ -472,13 +547,14 @@
                                             </div>
                                         </div>
                                     </li>
-                                    @foreach ($documente as $row)
+                                    {{-- @foreach ($documente as $row)
                                         @php
                                             $user = DB::table('users')
                                                 ->where('id', @$row->by_user_id)
                                                 ->first();
-                                        @endphp
-                                        @if ($user)
+                                        @endphp --}}
+                                    @if (!empty($data_file['content']) && $data_file['content'] > 0)
+                                        @foreach ($data_file['content'] as $da)
                                             <li
                                                 class="timeline-item d-flex position-relative overflow-hidden d-none history dokumente">
                                                 <div class="timeline-badge-wrap d-flex flex-column align-items-center">
@@ -486,17 +562,24 @@
                                                         class="timeline-badge border-2 border border-primary flex-shrink-0 my-8"></span>
                                                     <span class="timeline-badge-border d-block flex-shrink-0"></span>
                                                 </div>
-                                                <div class="card ms-3">
+                                                <div class="card ms-3 w-100" style="cursor: pointer;"
+                                                    onclick="downloadFile('{{ $da['id'] }}','{{ $da['voucherType'] }}')">
                                                     <div class="card-body p-3 px-3">
                                                         <p class="text-muted fs-2">
-                                                            {{ date('d. M H:i', strtotime($row->created_at)) }} -
-                                                            {{ $user->name }} {{ $user->last_name }}</p>
-                                                        <h6 class="fs-4">{{ $row->description }}</h6>
+                                                            {{ date('d. M H:i', strtotime($da['createdDate'])) }} -
+                                                            {{ $da['voucherType'] }} - {{ $da['voucherStatus'] }}</p>
+                                                        <div class="d-flex justify-content-between">
+                                                            <h6 class="fs-4">{{ $da['voucherNumber'] }}</h6>
+                                                            <h6 class="fs-4">
+                                                                {{ number_format((float) $da['totalAmount'], 2, ',', '') }}
+                                                                €</h6>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </li>
-                                        @endif
-                                    @endforeach
+                                        @endforeach
+                                    @endif
+                                    {{-- @endforeach --}}
                                     @php
                                         $all_leads = DB::table('leads')
                                             ->where('is_deleted', 0)
@@ -642,6 +725,10 @@
         <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+    <form id="formDownload" action="{{ url('downloadFile') }}" method="POST">
+        <input type="hidden" name="v_id" id="v_id">
+        <input type="hidden" name="v_type" id="v_type">
+    </form>
 @endsection
 
 @section('javascript')
@@ -693,5 +780,22 @@
                 $('#upload_image').submit();
             });
         });
+
+        function downloadFile(v_id, v_type) {
+            if(v_id && v_type){
+                $('#v_id').val(v_id);
+                $('#v_type').val(v_type);
+                $('#formDownload').submit();
+            }
+            // $.ajax({
+            //     url: "{{ url('downloadFile') }}",
+            //     method: "GET",
+            //     data: {
+            //         v_id: v_id,
+            //         v_type: v_type,
+            //     },
+            //     success: function(data) {}
+            // });
+        }
     </script>
 @endsection

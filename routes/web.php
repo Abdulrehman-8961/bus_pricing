@@ -96,6 +96,7 @@ Route::get('/Leads/delete/{id}', [LeadsController::class, 'delete']);
 Route::get('/Transfer-To-Deal/{id}', [LeadsController::class, 'transferToDeal']);
 Route::post('/upload_file/{id}', [LeadsController::class, 'upload']);
 Route::get('/Archive-Lead/{id}', [LeadsController::class, 'archive']);
+Route::post('/downloadFile', [LeadsController::class, 'download_file']);
 
 
 Route::get('/Stammdaten', [StammdatenController::class, 'view'])->middleware('isAdminDispatcher');

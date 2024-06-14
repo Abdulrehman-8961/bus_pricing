@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Auth;
 use Exception;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class LeadsController extends Controller
 {
@@ -684,5 +686,135 @@ class LeadsController extends Controller
             return redirect()->back()->with('success', 'Lead Added');
         }
         return redirect()->back()->with('error', 'Error!');
+    }
+
+    public function download_file(Request $request)
+    {
+        $accessToken = "iwnyrX7KxxpmvHDMaJcy60_I7z0TD3J9D2S6jOvxrFbBcQ4E"; // Replace with your access token
+        $v_id = $request->v_id;
+        $v_type = $request->v_type;
+
+        if ($v_type == 'invoice') {
+            $url = "https://api.lexoffice.io/v1/invoices/{$v_id}/document";
+        }
+        if ($v_type == 'quotation') {
+            $url = "https://api.lexoffice.io/v1/quotations/{$v_id}/document";
+        }
+        if ($v_type == 'orderconfirmation') {
+            $url = "https://api.lexoffice.io/v1/order-confirmations/{$v_id}/document";
+        }
+
+        if ($url){
+
+            $ch = curl_init($url);
+
+            // Set cURL options
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                "Authorization: Bearer {$accessToken}",
+                "Accept: application/json"
+            ]);
+
+            // Execute the GET request
+            $response = curl_exec($ch);
+            $data = json_decode($response, true);
+            // dd($data['documentFileId']);
+
+            if (curl_errno($ch)) {
+                echo 'Error:' . curl_error($ch);
+            }
+
+            curl_close($ch);
+
+            // The API endpoint and file ID
+            $fileId = $data['documentFileId']; // Replace with the actual file ID
+
+
+            try {
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Accept' => '*/*',
+                ])->get("https://api.lexoffice.io/v1/files/{$fileId}");
+
+                if ($response->successful()) {
+                    $fileData = $response->body();
+                    $contentType = $response->header('Content-Type');
+                    $contentDisposition = $response->header('Content-Disposition');
+
+                    // Extract file name from Content-Disposition header
+                    $fileName_ = 'file_'.now();
+                    if ($contentDisposition) {
+                        preg_match('/filename=("?)([^"\s;]+)\1?/i', $contentDisposition, $matches);
+                        if (isset($matches[2])) {
+                            $fileName_ = $matches[2];
+                        }
+                    }
+                    // if ($contentDisposition && preg_match('/filename="(.+)"/', $contentDisposition, $matches)) {
+                    //     dd('');
+                    //     $fileName = $matches[1];
+                    // }
+
+                    // Return file as downloadable response
+                    // dd($fileName_);
+                    return response()->make($fileData)
+                        ->header('Content-Type', $contentType)
+                        ->header('Content-Disposition', 'inline; filename="' . $fileName_ . '"');
+                        // "inline; filename=Angebot_AG6599.pdf;"
+                } else {
+                    // Handle unsuccessful response
+                    // return response()->json(['error' => 'Failed to download file: ' . $response->status()], $response->status());
+                }
+            } catch (\Exception $e) {
+                // Handle exception
+                // return response()->json(['error' => 'Failed to download file: ' . $e->getMessage()], 500);
+            }
+
+            // // Initialize a cURL session
+            // $curl_2 = curl_init();
+
+            // // Set the URL
+            // $url_2 = "https://api.lexoffice.io/v1/files/" . $fileId;
+            // curl_setopt($curl_2, CURLOPT_URL, $url_2);
+
+            // // Set the headers
+            // $headers = [
+            //     "Accept: */*",
+            //     "Authorization: Bearer " . $accessToken
+            //     ];
+            //     curl_setopt($curl_2, CURLOPT_HTTPHEADER, $headers);
+
+            //     // Return the response as a string instead of outputting it
+            //     curl_setopt($curl_2, CURLOPT_RETURNTRANSFER, true);
+
+            //     // Execute the request
+            //     $fileData = curl_exec($curl_2);
+
+            //     if (curl_errno($curl_2)) {
+            //         // Handle cURL error
+            //         $errorMessage = curl_error($curl_2);
+            //         curl_close($curl_2);
+            //         return response()->json(['error' => 'Failed to download file: ' . $errorMessage], 500);
+            //     }
+
+            //     // Get content type and suggested file name from headers
+            //     $contentType = curl_getinfo($curl_2, CURLINFO_CONTENT_TYPE);
+            //     $contentDisposition = curl_getinfo($curl_2, CURLINFO_CONTENT_DISPOSITION);
+            //     dd($contentDisposition);
+            //     curl_close($curl_2);
+
+            //     // Return file as downloadable response
+            //     if ($fileData) {
+            //         $response = response()->make($fileData);
+            //         $response->header('Content-Type', $contentType);
+            //         $response->header('Content-Disposition', 'attachment; filename="file_name.pdf"');
+            //         return $response;
+            //     } else {
+            //         return response()->json(['error' => 'Failed to download file: Invalid file data'], 500);
+            //     }
+            return redirect()->back();
+            }
+
+            return redirect()->back()->with('error', 'Etwas ist schief gelaufen. Bitte versuche es erneut');
+
     }
 }
