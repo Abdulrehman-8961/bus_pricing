@@ -33,6 +33,9 @@
             $billingAddress = @$content_1['addresses']['billing'][0];
             $company_name = @$content_1['company']['name'];
             $emailAddress = @$content_1['emailAddresses']['private'][0];
+            if(!isset($emailAddress)){
+                $emailAddress = @$content_1['emailAddresses']['business'][0];
+            }
             $lex_phone = @$content_1['phoneNumbers']['private'][0];
             if ($lex_phone == '') {
                 # code...

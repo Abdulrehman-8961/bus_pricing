@@ -115,9 +115,9 @@
                         <div class="col-lg-6 col-12 ">
                             <div class="mb-4">
                                 <label for="" class="form-label">Abfahrtsort</label>
-                                <input size="40" class="form-control" aria-required="true" aria-invalid="false"
-                                    placeholder="e.g. Mohrenstraße 17, 10117 Berlin" value="" type="text"
-                                    name="departure_point">
+                                <input size="40" class="form-control calculate_km" aria-required="true"
+                                    aria-invalid="false" placeholder="e.g. Mohrenstraße 17, 10117 Berlin" value=""
+                                    type="text" name="departure_point" id="departure_point">
                                 @error('departure_point')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
@@ -136,9 +136,9 @@
                         <div class="col-lg-6 col-12 ">
                             <div class="mb-4">
                                 <label for="" class="form-label">Ankunftsort</label>
-                                <input size="40" class="form-control" aria-required="true" aria-invalid="false"
-                                    placeholder="e.g. Am Wall 135, 28195 Bremen" value="" type="text"
-                                    name="arrival_point">
+                                <input size="40" class="form-control calculate_km" aria-required="true"
+                                    aria-invalid="false" placeholder="e.g. Am Wall 135, 28195 Bremen" value=""
+                                    type="text" name="arrival_point" id="arrival_point">
                                 @error('arrival_point')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
@@ -359,9 +359,9 @@
                 }
             })
             $('.btn-archive').on('click', function() {
-                if($('.btn-archive').prop('checked')){
+                if ($('.btn-archive').prop('checked')) {
                     var archive = 1;
-                    } else {
+                } else {
                     var archive = 0;
                 }
                 var search = $('#search-input').val();
@@ -369,18 +369,18 @@
             });
             $('#search-input').on('keyup', function() {
                 var search = $(this).val();
-                if($('.btn-archive').prop('checked')){
+                if ($('.btn-archive').prop('checked')) {
                     var archive = 1;
-                    } else {
+                } else {
                     var archive = 0;
                 }
                 leadsView(1, search, archive);
             });
             $(document).on('click', '.pagination a', function(e) {
                 e.preventDefault();
-                if($('.btn-archive').prop('checked')){
+                if ($('.btn-archive').prop('checked')) {
                     var archive = 1;
-                    } else {
+                } else {
                     var archive = 0;
                 }
                 var page = $(this).attr('href').split('page=')[1]; // Get the page number
@@ -406,6 +406,96 @@
             });
         }
 
+        // $(document).on('change', '.calculate_km', async function() {
+        //     var departure_point = $('#departure_point').val();
+        //     var arrival_point = $('#arrival_point').val();
+
+        //     if (departure_point && arrival_point) {
+        //         try {
+        //             // Fetch both locations concurrently
+        //             const [departureLocation, arrivalLocation] = await Promise.all([
+        //                 getLocation(departure_point),
+        //                 getLocation(arrival_point)
+        //             ]);
+
+        //             if (departureLocation && arrivalLocation) {
+        //                 // Destructure latitude and longitude for both locations
+        //                 const {
+        //                     latitude: departureLat,
+        //                     longitude: departureLon
+        //                 } = departureLocation;
+        //                 const {
+        //                     latitude: arrivalLat,
+        //                     longitude: arrivalLon
+        //                 } = arrivalLocation;
+
+        //                 // Calculate the distance using the haversine formula
+        //                 var km = haversine(departureLat, departureLon, arrivalLat, arrivalLon);
+        //                 console.log(`Distance: ${km.toFixed(2)} km`); // Log distance with two decimal points
+        //                 $('#entfernung').val(km.toFixed(2));
+        //             } else {
+        //                 console.log("One or both locations not found.");
+        //             }
+        //         } catch (error) {
+        //             console.error("Error getting location:", error);
+        //         }
+        //     }
+        // });
+
+        // async function getLocation(areaName) {
+        //     try {
+        //         let response = await fetch(
+        //             `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(areaName)}`
+        //         );
+
+        //         if (!response.ok) {
+        //             throw new Error("Network response was not ok");
+        //         }
+
+        //         let data = await response.json();
+        //         if (data.length > 0) {
+        //             const latitude = parseFloat(data[0].lat);
+        //             const longitude = parseFloat(data[0].lon);
+        //             return {
+        //                 latitude,
+        //                 longitude
+        //             };
+        //         } else {
+        //             throw new Error("Location not found.");
+        //         }
+        //     } catch (error) {
+        //         console.error("Error fetching location data:", error);
+        //         throw error;
+        //     }
+        // }
+
+        // function haversine(lat1, lon1, lat2, lon2) {
+        //     const R = 6371; // Radius of the Earth in kilometers
+
+        //     // Convert degrees to radians
+        //     const toRadians = (degrees) => degrees * (Math.PI / 180);
+
+        //     const lat1_rad = toRadians(lat1);
+        //     const lon1_rad = toRadians(lon1);
+        //     const lat2_rad = toRadians(lat2);
+        //     const lon2_rad = toRadians(lon2);
+
+        //     // Differences in coordinates
+        //     const d_lat = lat2_rad - lat1_rad;
+        //     const d_lon = lon2_rad - lon1_rad;
+
+        //     // Haversine formula
+        //     const a = Math.sin(d_lat / 2) ** 2 +
+        //         Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin(d_lon / 2) ** 2;
+        //     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        //     // Distance in kilometers
+        //     const distance = R * c;
+
+        //     return distance;
+        // }
+
+
         $(document).on('click', '.delete', function() {
             var deleteId = $(this).attr('data-id');
             if (deleteId) {
@@ -428,5 +518,48 @@
                 });
             }
         })
+    </script>
+    {{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBei1BFgaTBUtn3uaxlKUd7GPp1Jd2JHn0&callback=initAutocomplete&libraries=places&v=weekly" defer></script> --}}
+        {{-- get distance via api --}}
+    <script>
+        $(document).on('change', '.calculate_km', function() {
+            var departure_point = $('#departure_point').val();
+            var arrival_point = $('#arrival_point').val();
+
+            if (departure_point && arrival_point) {
+                calculateDrivingDistance(departure_point, arrival_point);
+            }
+        });
+        function calculateDrivingDistance(origin, destination) {
+
+
+            const service = new google.maps.DistanceMatrixService();
+            service.getDistanceMatrix({
+                origins: [origin],
+                destinations: [destination],
+                travelMode: 'DRIVING',
+                unitSystem: google.maps.UnitSystem.METRIC, // or google.maps.UnitSystem.IMPERIAL
+            }, callback);
+        }
+
+        function callback(response, status) {
+            if (status === 'OK') {
+                const origin = response.originAddresses[0];
+                const destination = response.destinationAddresses[0];
+                const distanceElement = response.rows[0].elements[0];
+
+                if (distanceElement.status === 'OK') {
+                    const distanceInMeters = distanceElement.distance.value; // Distance in meters
+            const distanceInKilometers = distanceInMeters / 1000;
+// console.log(`Distance from ${origin} to ${destination} is ${distance} and it takes about ${duration}.`);
+console.log(distanceInKilometers);
+$('#entfernung').val(Math.round(distanceInKilometers));
+                } else {
+                    console.error('Error calculating distance:', distanceElement.status);
+                }
+            } else {
+                console.error('Error with the request:', status);
+            }
+        }
     </script>
 @endsection

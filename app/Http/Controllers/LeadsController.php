@@ -514,178 +514,207 @@ class LeadsController extends Controller
             'departure_point' => 'required',
             'arrival_point' => 'required'
         ]);
-        $accessToken = "iwnyrX7KxxpmvHDMaJcy60_I7z0TD3J9D2S6jOvxrFbBcQ4E";
-        try {
-            if ($request->label != "Privat") {
-                $data = array(
-                    'roles' => array(
-                        'customer' => array('active' => true)
-                    ),
-                    'company' => array(
-                        'name' => isset($request->firma_name) ? $request->firma_name : '',
-                        'contactPersons' => array(
-                            array(
-                                'firstName' => isset($request->name) ? $request->name : '',
-                                'lastName' => isset($request->last_name) ? $request->last_name : '',
-                                'primary' => true,
-                                'emailAddress' => isset($request->email) ? $request->email : '',
-                                'phoneNumber' => isset($request->phone) ? $request->phone : '',
-                            )
-                        ),
-                    ),
-                    'addresses' => array(
-                        'billing' => array(
-                            array(
-                                "supplement" => isset($request->supplement) ? $request->supplement : '',
-                                "street" => isset($request->street) ? $request->street : '',
-                                "zip" => isset($request->zip_code) ? $request->zip_code : '',
-                                "city" => isset($request->city) ? $request->city : '',
-                                "countryCode" => isset($request->country_code) ? $request->country_code : ''
-                            )
-                        ),
-                    ),
-                    'emailAddresses' => array(
-                        'private' => array(
-                            isset($request->email) ? $request->email : '',
-                        )
-                    ),
-                    'phoneNumbers' => array(
-                        'private' => array(
-                            isset($request->phone) ? $request->phone : '',
-                        )
-                    ),
-                    'note' => @$request->notizen
-                );
-            } else {
-                $data = array(
-                    'roles' => array(
-                        'customer' => array('active' => true)
-                    ),
-                    'person' => array(
-                        'firstName' => isset($request->name) ? $request->name : '',
-                        'lastName' => isset($request->last_name) ? $request->last_name : '',
-                    ),
-                    'addresses' => array(
-                        'billing' => array(
-                            array(
-                                "supplement" => isset($request->supplement) ? $request->supplement : '',
-                                "street" => isset($request->street) ? $request->street : '',
-                                "zip" => isset($request->zip_code) ? $request->zip_code : '',
-                                "city" => isset($request->city) ? $request->city : '',
-                                "countryCode" => isset($request->country_code) ? $request->country_code : ''
-                            )
-                        ),
-                    ),
-                    'emailAddresses' => array(
-                        'private' => array(
-                            isset($request->email) ? $request->email : '',
-                        )
-                    ),
-                    'phoneNumbers' => array(
-                        'private' => array(
-                            isset($request->phone) ? $request->phone : '',
-                        )
-                    ),
-                    'note' => @$request->notizen
-                );
-            }
+        $curl = curl_init();
 
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, 'https://api.lexoffice.io/v1/contacts');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Authorization: Bearer ' . $accessToken,
+        curl_setopt_array($curl, [
+            CURLOPT_URL => 'https://api.lexoffice.io/v1/contacts?email=' . @$request->email,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer iwnyrX7KxxpmvHDMaJcy60_I7z0TD3J9D2S6jOvxrFbBcQ4E',
+                'Accept: application/json',
                 'Content-Type: application/json',
-                'Accept: application/json'
-            ));
+            ],
+        ]);
 
-            $response = curl_exec($ch);
+        $previousData = curl_exec($curl);
 
-            $decodedResponse = json_decode($response, true);
-            if (isset($decodedResponse['IssueList'])) {
-                $errorMessages = [];
-                foreach ($decodedResponse['IssueList'] as $issue) {
-                    $errorMessages[] = $issue['i18nKey'];
+        curl_close($curl);
+        // echo $response;
+
+        $data1 = json_decode($previousData, true);
+
+
+        if (empty($data1['content'])) {
+            $accessToken = "iwnyrX7KxxpmvHDMaJcy60_I7z0TD3J9D2S6jOvxrFbBcQ4E";
+            try {
+                if ($request->label != "Privat") {
+                    $data = array(
+                        'roles' => array(
+                            'customer' => array('active' => true)
+                        ),
+                        'company' => array(
+                            'name' => isset($request->firma_name) ? $request->firma_name : '',
+                            'contactPersons' => array(
+                                array(
+                                    'firstName' => isset($request->name) ? $request->name : '',
+                                    'lastName' => isset($request->last_name) ? $request->last_name : '',
+                                    'primary' => true,
+                                    'emailAddress' => isset($request->email) ? $request->email : '',
+                                    'phoneNumber' => isset($request->phone) ? $request->phone : '',
+                                )
+                            ),
+                        ),
+                        'addresses' => array(
+                            'billing' => array(
+                                array(
+                                    "supplement" => isset($request->supplement) ? $request->supplement : '',
+                                    "street" => isset($request->street) ? $request->street : '',
+                                    "zip" => isset($request->zip_code) ? $request->zip_code : '',
+                                    "city" => isset($request->city) ? $request->city : '',
+                                    "countryCode" => isset($request->country_code) ? $request->country_code : ''
+                                )
+                            ),
+                        ),
+                        'emailAddresses' => array(
+                            'private' => array(
+                                isset($request->email) ? $request->email : '',
+                            )
+                        ),
+                        'phoneNumbers' => array(
+                            'private' => array(
+                                isset($request->phone) ? $request->phone : '',
+                            )
+                        ),
+                        'note' => @$request->notizen
+                    );
+                } else {
+                    $data = array(
+                        'roles' => array(
+                            'customer' => array('active' => true)
+                        ),
+                        'person' => array(
+                            'firstName' => isset($request->name) ? $request->name : '',
+                            'lastName' => isset($request->last_name) ? $request->last_name : '',
+                        ),
+                        'addresses' => array(
+                            'billing' => array(
+                                array(
+                                    "supplement" => isset($request->supplement) ? $request->supplement : '',
+                                    "street" => isset($request->street) ? $request->street : '',
+                                    "zip" => isset($request->zip_code) ? $request->zip_code : '',
+                                    "city" => isset($request->city) ? $request->city : '',
+                                    "countryCode" => isset($request->country_code) ? $request->country_code : ''
+                                )
+                            ),
+                        ),
+                        'emailAddresses' => array(
+                            'private' => array(
+                                isset($request->email) ? $request->email : '',
+                            )
+                        ),
+                        'phoneNumbers' => array(
+                            'private' => array(
+                                isset($request->phone) ? $request->phone : '',
+                            )
+                        ),
+                        'note' => @$request->notizen
+                    );
                 }
-                throw new Exception(implode(', ', $errorMessages));
+
+                $ch = curl_init();
+
+                curl_setopt($ch, CURLOPT_URL, 'https://api.lexoffice.io/v1/contacts');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Authorization: Bearer ' . $accessToken,
+                    'Content-Type: application/json',
+                    'Accept: application/json'
+                ));
+
+                $response = curl_exec($ch);
+
+                $decodedResponse = json_decode($response, true);
+                if (isset($decodedResponse['IssueList'])) {
+                    $errorMessages = [];
+                    foreach ($decodedResponse['IssueList'] as $issue) {
+                        $errorMessages[] = $issue['i18nKey'];
+                    }
+                    throw new Exception(implode(', ', $errorMessages));
+                }
+            } catch (Exception $e) {
+                // echo "Error: " . $e->getMessage();
+                return redirect()->back()->with('error', 'Etwas ist schief gelaufen. Bitte versuche es erneut');
             }
-        } catch (Exception $e) {
-            // echo "Error: " . $e->getMessage();
-            return redirect()->back()->with('error', 'Etwas ist schief gelaufen. Bitte versuche es erneut');
+
+
+            // dd($response);
+
+            $responseArray = json_decode($response, true);
+
+            $resuorceid = $responseArray['id'];
+            $resourceUri = $responseArray['resourceUri'];
+            $createdDate = $responseArray['createdDate'];
+            $updatedDate = $responseArray['updatedDate'];
+            $version = $responseArray['version'];
+            $l_no = DB::table('leads')->latest('created_at')->first();
+            if (isset($l_no)) {
+                $last_no = $l_no->vnr;
+                $new_no = $last_no + 1;
+            } else {
+                $new_no = '2000';
+            }
+            if ($resuorceid) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, "https://api.lexoffice.io/v1/contacts/{$resuorceid}");
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+
+                $headers = [
+                    "Authorization: Bearer " . $accessToken,
+                    "Accept: application/json"
+                ];
+
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+                $response2 = curl_exec($ch);
+                $responseArray2 = json_decode($response2, true);
+                $customerNumber = $responseArray2['roles']['customer']['number'];
+
+                $hinfahrtParts = explode('T', @$request->hinfahrt);
+                $hinfahrt = @$hinfahrtParts[0];
+                $menu_731 = @$hinfahrtParts[0];
+
+                $rückfahrtParts = explode('T', @$request->rückfahrt);
+                $rückfahrt = @$rückfahrtParts[0];
+                $menu_732 = @$rückfahrtParts[0];
+
+                // dd($hinfahrtParts,$rückfahrtParts);
+
+                DB::table('leads')->insert([
+                    'vnr' => @$new_no,
+                    'customer_number' => @$customerNumber,
+                    'firstname' => @$request->name,
+                    'lastname' => @$request->last_name,
+                    'firmaoptional' => @$request->firma_name,
+                    'email' => @$request->email,
+                    'phone' => @$request->phone,
+                    'grund' => @$request->label,
+                    'hinfahrt' => @$hinfahrt,
+                    'menu_731' => @$menu_731,
+                    'rueckfahrtt' => @$rückfahrt,
+                    'menu_732' => @$menu_732,
+                    'pax' => @$request->pax,
+                    'kundenbetreuer' => @$request->kundenbetreuer,
+                    'quelle' => @$request->quelle,
+                    'notizer' => @$request->notizen,
+                    'resuorceid' => @$resuorceid,
+                    'resourceuri' => @$resourceUri,
+                    'start' => @$request->street . ' ' . @$request->zip_code . ' ' . @$request->city,
+                    'ziel' => $request->arrival_point,
+                ]);
+                return redirect()->back()->with('success', 'Lead Added');
+            }
+            return redirect()->back()->with('error', 'Error!');
         }
-
-
-        // dd($response);
-
-        $responseArray = json_decode($response, true);
-
-        $resuorceid = $responseArray['id'];
-        $resourceUri = $responseArray['resourceUri'];
-        $createdDate = $responseArray['createdDate'];
-        $updatedDate = $responseArray['updatedDate'];
-        $version = $responseArray['version'];
-        $l_no = DB::table('leads')->latest('created_at')->first();
-        if (isset($l_no)) {
-            $last_no = $l_no->vnr;
-            $new_no = $last_no + 1;
-        } else {
-            $new_no = '2000';
-        }
-        if ($resuorceid) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "https://api.lexoffice.io/v1/contacts/{$resuorceid}");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-
-            $headers = [
-                "Authorization: Bearer " . $accessToken,
-                "Accept: application/json"
-            ];
-
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-            $response2 = curl_exec($ch);
-            $responseArray2 = json_decode($response2, true);
-            $customerNumber = $responseArray2['roles']['customer']['number'];
-
-            $hinfahrtParts = explode('T', @$request->hinfahrt);
-            $hinfahrt = @$hinfahrtParts[0];
-            $menu_731 = @$hinfahrtParts[0];
-
-            $rückfahrtParts = explode('T', @$request->rückfahrt);
-            $rückfahrt = @$rückfahrtParts[0];
-            $menu_732 = @$rückfahrtParts[0];
-
-            // dd($hinfahrtParts,$rückfahrtParts);
-
-            DB::table('leads')->insert([
-                'vnr' => @$new_no,
-                'customer_number' => @$customerNumber,
-                'firstname' => @$request->name,
-                'lastname' => @$request->last_name,
-                'firmaoptional' => @$request->firma_name,
-                'email' => @$request->email,
-                'phone' => @$request->phone,
-                'grund' => @$request->label,
-                'hinfahrt' => @$hinfahrt,
-                'menu_731' => @$menu_731,
-                'rueckfahrtt' => @$rückfahrt,
-                'menu_732' => @$menu_732,
-                'pax' => @$request->pax,
-                'kundenbetreuer' => @$request->kundenbetreuer,
-                'quelle' => @$request->quelle,
-                'notizer' => @$request->notizen,
-                'resuorceid' => @$resuorceid,
-                'resourceuri' => @$resourceUri,
-                'start' => @$request->street . ' ' . @$request->zip_code . ' ' . @$request->city,
-                'ziel' => $request->arrival_point,
-            ]);
-            return redirect()->back()->with('success', 'Lead Added');
-        }
-        return redirect()->back()->with('error', 'Error!');
+        return redirect()->back()->with('error', 'Kontakt existiert bereits');
     }
 
     public function download_file(Request $request)
@@ -704,7 +733,7 @@ class LeadsController extends Controller
             $url = "https://api.lexoffice.io/v1/order-confirmations/{$v_id}/document";
         }
 
-        if ($url){
+        if ($url) {
 
             $ch = curl_init($url);
 
@@ -742,7 +771,7 @@ class LeadsController extends Controller
                     $contentDisposition = $response->header('Content-Disposition');
 
                     // Extract file name from Content-Disposition header
-                    $fileName_ = 'file_'.now();
+                    $fileName_ = 'file_' . now();
                     if ($contentDisposition) {
                         preg_match('/filename=("?)([^"\s;]+)\1?/i', $contentDisposition, $matches);
                         if (isset($matches[2])) {
@@ -759,7 +788,7 @@ class LeadsController extends Controller
                     return response()->make($fileData)
                         ->header('Content-Type', $contentType)
                         ->header('Content-Disposition', 'inline; filename="' . $fileName_ . '"');
-                        // "inline; filename=Angebot_AG6599.pdf;"
+                    // "inline; filename=Angebot_AG6599.pdf;"
                 } else {
                     // Handle unsuccessful response
                     // return response()->json(['error' => 'Failed to download file: ' . $response->status()], $response->status());
@@ -812,9 +841,8 @@ class LeadsController extends Controller
             //         return response()->json(['error' => 'Failed to download file: Invalid file data'], 500);
             //     }
             return redirect()->back();
-            }
+        }
 
-            return redirect()->back()->with('error', 'Etwas ist schief gelaufen. Bitte versuche es erneut');
-
+        return redirect()->back()->with('error', 'Etwas ist schief gelaufen. Bitte versuche es erneut');
     }
 }
